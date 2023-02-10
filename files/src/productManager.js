@@ -2,7 +2,7 @@ import fs from 'fs'
 
 /* ------------------------------------------ DECLARO LA CLASE ------------------------------------------ */
 export class ProductManager{
-  #ruta = './files/src/productos.json'
+  #ruta = './productos.json'
   constructor(){
     this.products = []
     this.path = this.#ruta
@@ -44,14 +44,14 @@ export class ProductManager{
     }
     return console.log(productDb)
   }
-  updateProduct = async (id, campoActualizar) => {
+  updateProduct = async (id, objetoActualizar) => {
     const data = await fs.promises.readFile(this.path, 'utf-8')
     const productDb = await JSON.parse(data)
     const index = await productDb.findIndex(product => product.id.toString() === id)
     if (index === -1) {
       return console.log(`No existe producto con el id: ${id}`)
     }
-    productDb[index] = { ...campoActualizar, id: productDb[index].id }
+    productDb[index] = { ...objetoActualizar, id: productDb[index].id }
     await fs.promises.writeFile(this.path, JSON.stringify(productDb, null,'\t'))
     console.log('Producto actualizado en la base de datos');
   }
@@ -68,7 +68,7 @@ export class ProductManager{
   }
 }
 
-
+//const productos = new ProductManager()
 // productos.addProduct({
 //     title: 'producto 1',
 //     description: 'esto es un producto',
@@ -110,7 +110,7 @@ export class ProductManager{
 //   stock: 100
 // })
 
-// console.log(productos.getProducts())
+//console.log(productos.getProducts())
 
 // console.log(productos.getProductById(2))
 
