@@ -5,7 +5,7 @@ import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
 import viewsRouter from './routes/views.js'
 import __dirname from './utils.js'
-import { ProductManager } from './dao/fileSystem/productManager.js'
+import { MongoProductManager } from './dao/mongo/mongoProductManager.js'
 import dbConnection from './config/dbConnection.js'
 import chatModel from './models/messages.js'
 
@@ -14,7 +14,7 @@ const PORT = 8080
 
 dbConnection()
 
-const productManager = new ProductManager()
+const productManager = new MongoProductManager()
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -46,7 +46,6 @@ socketServer.on('connection', async socket => {
     try {
         productos = await productManager.getProducts()
         mensajes = await chatModel.find()
-        console.log(mensajes);
         socket.emit('mensajeServer', productos)
         socket.emit('mensajesChat', mensajes)
     } catch (error) {
@@ -65,7 +64,6 @@ socketServer.on('connection', async socket => {
         thumbnail
       } = data
       data.status = true
-      console.log('data: ', data)
 
         if (!title || !description || !code || !price || !stock || !category) {
             console.log('Debe completar todos los campos');
@@ -91,7 +89,6 @@ socketServer.on('connection', async socket => {
     })
 
     socket.on('msg', async data => {
-        console.log(data);
         try {
             await chatModel.insertMany(data)
             let datos = await chatModel.find()
