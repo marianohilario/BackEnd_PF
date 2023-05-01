@@ -1,13 +1,14 @@
 import { Router } from "express"
 import { userVali } from "../middleware/userValidation.js"
-import { MongoUserManager } from "../dao/mongo/MongoUserManager.js"
+import { MongoUserManager } from "../dao/mongo/mongoUserManager.js"
 import { createHash, isValidPassword } from "../ultis/bcryptPass.js"
+import passport from "passport"
 
 const router = Router()
 
 const mongoUserManager = new MongoUserManager
 
-router.get('/', (req, res) => {
+router.get('/login', (req, res) => {
     res.render('login')
 })
 
@@ -15,33 +16,23 @@ router.get('/register', (req, res) => {
     res.render('register')
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', passport.authenticate('login', {failureRedirect: '/auth/faillogin'}), async (req, res) => {
+    if(!req.user) return res.status(400).send({status: 'error', error: 'Credenciales inválidas'})
     const { username, password } = req.body
-
     try {
         
-        let user = await mongoUserManager.getUser(username)
-
-        if (!user) {
-            res.send({status: 'error', message: 'Usuario no existe'})
-        }
-
-        if(!isValidPassword(user, password)){
-            res.send({status: 'error', message: 'Contraseña incorrecta'})
-        }
-
-        if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
-            req.session.user = user.nombre
+        if (req.user.email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+            req.session.user = req.user.nombre
             req.session.admin = true
             req.session.usuario = false
             console.log('usted es admin')
             res.redirect('http://localhost:8080/products')
         } else {
-            req.session.user = user.nombre
+            req.session.user = req.user.nombre
             req.session.admin = false
             req.session.usuario = true
             console.log('usted es usuario')
-            res.redirect('http://localhost:8080/products')
+             res.redirect('http://localhost:8080/products')
         }
 
     } catch (error) {
@@ -49,10 +40,28 @@ router.post('/login', async (req, res) => {
     }
 })
 
+router.get('/faillogin', (req, res) => {
+    res.send({status: 'error', message: 'Falló el login'})
+})
+
+
+router.post('/register', userVali, passport.authenticate('register', {failureRedirect: '/auth/failregister'}), async (req, res)=>{
+    
+    try {
+        res.redirect('http://localhost:8080/auth/login')
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.get('/failregister', (req, res) => {
+    res.send({status: 'error', message: 'Falló el registro'})
+})
+
 router.post('/logout', async (req, res) => {
     try {
         req.session.destroy(err => {
-            if(!err) res.redirect('http://localhost:8080/auth')
+            if(!err) res.redirect('http://localhost:8080/auth/login')
             else res.send({status:'Logout error', message: err})
         })
     } catch (error) {
@@ -60,23 +69,13 @@ router.post('/logout', async (req, res) => {
     }
 })
 
-router.post('/register', userVali, async (req, res)=>{
-    const { nombre, apellido, rol = 'user', email, password } = req.body
-    let user = { nombre, apellido, rol, email, password: createHash(password) }
+router.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {})
 
-    try {
-        let exist = await mongoUserManager.getUser(email)
-        
-        if(exist) {
-            res.send({status:'error', message: 'Ya existe un usuario registrado con el email informado'})
-        }else{
-            await mongoUserManager.addUser(user)
-            res.redirect('http://localhost:8080/auth')
-            console.log('Usuario generado con éxito');
-        }
-    } catch (error) {
-        console.log(error);
-    }
+router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/auth/login'}), async (req, res) => {
+    req.session.user = req.user.nombre
+    req.session.admin = false
+    req.session.usuario = true
+    res.redirect('http://localhost:8080/products')
 })
 
 export default router

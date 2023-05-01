@@ -1,15 +1,15 @@
 <div>
     <h2>Inicia Sesion</h2>
 
-    <form action="auth/login" method="post">
+    <form action="http://localhost:8080/auth/login" method="post">
         <p>Email</p>
-        <input type="text" name="username" id="email" placeholder="user@gmail.com">
+        <input type="text" name="username" id="email" placeholder="correo@correo.com">
 
         <p>Password</p>
         <input type="text" name="password" id="password" placeholder="************">
 
         <button type="submit" id="btn">Iniciar Sesión</button>
-        <button type="submit" id="btnGit">Iniciar Sesión con Github</button>
+        <a href="http://localhost:8080/auth/github" id="btnGit">Iniciar Sesión con Github</a>
     </form>
 </div>
 

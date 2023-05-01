@@ -3,7 +3,7 @@ import UserModel from '../../models/user.model.js'
 export class MongoUserManager{
     async addUser(user){
         try {
-            await UserModel.create(user)
+            return await UserModel.create(user)
         } catch (error) {
             console.log(error);
         }

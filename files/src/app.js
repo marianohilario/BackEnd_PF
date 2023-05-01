@@ -10,6 +10,8 @@ import { MongoProductManager } from "./dao/mongo/mongoProductManager.js";
 import dbConnection from "./config/dbConnection.js";
 import chatModel from "./models/messages.js";
 import { Server } from "socket.io";
+import { initPassport } from "./config/passport.js";
+import passport from "passport";
 
 const app = express();
 const PORT = 8080;
@@ -23,9 +25,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
     secret: 'secretCoder',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false
 }))
+
+initPassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use("/public", express.static(__dirname + "/public"));
 
