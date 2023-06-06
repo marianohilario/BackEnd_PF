@@ -1,12 +1,9 @@
 import { Router } from "express"
 import { userVali } from "../middleware/userValidation.js"
-//import { MongoUserManager } from "../dao/mongo/mongoUserManager.js"
-//import { createHash, isValidPassword } from "../ultis/bcryptPass.js"
 import passport from "passport"
 
 const router = Router()
 
-//const mongoUserManager = new MongoUserManager
 
 router.get('/login', (req, res) => {
     res.render('login')
