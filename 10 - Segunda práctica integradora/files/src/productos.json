@@ -1,0 +1,79 @@
+[
+	{
+		"title": "Producto 1 (Updated)",
+		"description": "Descripción producto",
+		"price": 100,
+		"thumbnail": "link",
+		"code": "a13sh",
+		"stock": 11,
+		"category": "electronic",
+		"status": true,
+		"id": 1
+	},
+	{
+		"title": "Producto 2 (Updated)",
+		"description": "Descripción producto",
+		"price": 100,
+		"thumbnail": "link",
+		"code": "a23sh",
+		"stock": 11,
+		"category": "electronic",
+		"status": true,
+		"id": 2
+	},
+	{
+		"title": "Producto 3",
+		"description": "Descripción producto",
+		"price": 100,
+		"thumbnail": "link",
+		"code": "a33sh",
+		"stock": 11,
+		"category": "electronic",
+		"status": true,
+		"id": 3
+	},
+	{
+		"title": "Producto 4",
+		"description": "Descripción producto",
+		"price": 100,
+		"thumbnail": "link",
+		"code": "a43sh",
+		"stock": 11,
+		"category": "electronic",
+		"status": true,
+		"id": 4
+	},
+	{
+		"title": "Producto 5",
+		"description": "Descripción producto",
+		"price": 100,
+		"thumbnail": "link",
+		"code": "a53sh",
+		"stock": 11,
+		"category": "electronic",
+		"status": true,
+		"id": 5
+	},
+	{
+		"title": "Producto 6",
+		"description": "Descripción producto",
+		"price": 100,
+		"thumbnail": "link",
+		"code": "a63sh",
+		"stock": 11,
+		"category": "electronic",
+		"status": true,
+		"id": 6
+	},
+	{
+		"title": "Producto 7",
+		"description": "Descripción producto 7",
+		"code": "a73sh",
+		"price": "150",
+		"stock": "11",
+		"category": "electronic",
+		"thumbnail": "link",
+		"status": true,
+		"id": 7
+	}
+]
