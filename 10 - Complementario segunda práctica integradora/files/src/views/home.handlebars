@@ -1,0 +1,31 @@
+<div>
+    <div>
+        <h2>Bienvenido {{username}}</h2>
+
+        <form action="auth/logout" method="post">
+            <button id="logout">Cerrar sesion</button>
+        </form>
+    </div>
+    
+    <h2>Todos los Productos</h2>
+    {{#each productos}}
+        <div>
+            <h3>{{this.title}}</h3>
+            <p>{{this.description}}</p>
+            <p>Category: {{this.category}}</p>
+            <p>Price: {{this.price}}</p>
+        </div>
+        
+        <form action="/api/carts/642b511337deda319bd15624/product/{{this._id}}" method="post">
+            <button type="submit">agragar al carrito</button>
+        </form>
+    {{/each}}
+
+    {{#if hasPrevPage}}
+        <a href="/products?page={{prevPage}}&&limit={{limit}}"><button>Anterior</button></a>
+    {{/if}}
+    <p>{{page}}</p>
+    {{#if hasNextPage}}
+        <a href="/products?page={{nextPage}}&&limit={{limit}}"><button>Siguiente</button></a>
+    {{/if}}
+</div>
