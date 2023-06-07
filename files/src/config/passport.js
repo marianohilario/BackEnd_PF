@@ -90,8 +90,6 @@ export const initPassport = () => {
 
         async (req, username, password, done) => {
             const { first_name, last_name, age, role = 'user', email } = req.body
-            console.log('username: ',username)
-            console.log('password: ',password)
             
             try {
                 let exist = await mongoUserManager.getUser(username)
