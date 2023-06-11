@@ -1,6 +1,7 @@
 import { connect } from "mongoose"
+import config from './config.js'
 
-const URL = 'mongodb+srv://marianohilario:va09santi30@cluster0.fdy8vrg.mongodb.net/ecommerce?retryWrites=true&w=majority'
+const URL = config.mongoUrl
 
 const dbConnection = async () => {
     return await connect(URL, error => {

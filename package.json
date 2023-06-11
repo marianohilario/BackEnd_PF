@@ -20,6 +20,7 @@
   "homepage": "https://github.com/marianohilario/BackEnd#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "express-handlebars": "^6.0.7",
     "express-session": "^1.17.3",
