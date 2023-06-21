@@ -16,7 +16,7 @@
             <p>Price: {{this.price}}</p>
         </div>
         
-        <form action="/api/carts/649104d9d833e0d8969074db/product/{{this._id}}" method="post">
+        <form action="/api/carts/{{../usercart}}/product/{{this._id}}" method="post">
             <button type="submit">Agragar al carrito</button>
         </form>
     {{/each}}
