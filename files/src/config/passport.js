@@ -6,6 +6,7 @@ import { createHash, isValidPassword } from '../ultis/bcryptPass.js'
 import userModel from '../models/user.model.js'
 import SessionsService from '../services/sessionsService.js'
 import logger from '../ultis/logger.js'
+import config from '../config/config.js'
 
 const localStrategy = local.Strategy
 const mongoCartManager = new MongoCartManager
@@ -31,7 +32,7 @@ export const initPassport = () => {
         clientID: 'Iv1.27a6aa5f2dc735d9',
         clientSecret: 'add97dffd8275a0eda30831989701a195d3fd9a1',
         callbackURL: 'http://localhost:8080/auth/githubcallback'
-    }, async (profile, done) => {
+    }, async (accessToken, refreshToken, profile, done) => {
 
         try {
             let user = await sessionsService.getUser({ email: profile._json.email})
@@ -67,7 +68,7 @@ export const initPassport = () => {
                 let user = await sessionsService.getUser(username)
 
                 if (!user) {
-                    logger.error('Error al loguearse. Usuario no existe')
+                    logger.error('Error al loguearse. El usuario no existe')
                     return done(null, false)
                 }
 
@@ -95,11 +96,13 @@ export const initPassport = () => {
         async (req, username, password, done) => {
             const { first_name, last_name, age, roll = 'user', email } = req.body
             
+            if (username === config.adminName && password === config.adminPassword) roll = 'admin'
+
             try {
                 let exist = await sessionsService.getUser(username)
 
                 if (exist) {
-                    logger.warning('Error al registrarse. El usuario ya existe');
+                    logger.warning('Error al registrarse. El correo electrónico ya se encuentra registrado');
                     return done(null, false)
                 } else {
                     let cart = await mongoCartManager.createCart()

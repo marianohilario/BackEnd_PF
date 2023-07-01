@@ -8,5 +8,6 @@ export class ProductsDTO{
         this.stock = newItem.stock,
         this.status = true,
         this.category = newItem.category
+        this.owner = newItem.owner
     }
 }

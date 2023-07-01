@@ -1,6 +1,6 @@
 <div>
     <h2>Agregar un producto</h2>
-    <form>
+    <form action="http://localhost:8080/api/products" method="post">
         <label>Titulo</label> <br>
         <input type="text" name="title" id="title"> <br>
 
@@ -22,15 +22,16 @@
         <label>Imagen</label> <br>
         <input type="text" name="thumbnail" id="thumbnail"> <br>
 
-        <input type="submit" id="submitProduct" value="Agregar Producto">
+        <button type="submit">Agregar Producto</button>
     </form>
 
     <h2>Elimine un producto</h2>
-    <form>
+    <form action="http://localhost:8080/api/products/{{this._id}}" method="delete">
         <label>Ingrese el id del producto a eliminar</label> <br>
         <input type="text" name="title" id="productDelete"> <br>
 
-        <input type="submit" id="deleteProduct" value="Eliminar Producto">
+        {{!--<input type="submit" id="deleteProduct" value="Eliminar Producto">--}}
+        <input type="submit" value="Eliminar Producto">
     </form>
 
     <h2>Todos los Productos</h2>

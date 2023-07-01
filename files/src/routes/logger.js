@@ -1,11 +1,6 @@
 import { Router } from "express";
-//import program from "../../process.js";
 
 const router = Router()
-
-//const { mode } = program.opts();
-
-//const isDevelop = mode === "DEVELOPMENT";
 
 router.get("/:level", (req, res) => {
   const { level } = req.params;

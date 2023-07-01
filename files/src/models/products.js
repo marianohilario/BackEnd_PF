@@ -37,8 +37,7 @@ const productsSchema = Schema({
     },
     owner: {
       type: String,
-      default: "Admin",
-      required: true,
+      required: true
     },
 })
 

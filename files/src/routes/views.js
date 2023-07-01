@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth } from '../middleware/auth.js'
 import ViewsController from "../controllers/viewsController.js"
-import { rollAdminVerify, rollUserVerify } from "../middleware/rollVerify.js";
+import { rollVerify, rollUserVerify } from "../middleware/rollVerify.js";
 
 const router = Router()
 
@@ -11,7 +11,7 @@ router.get('/products', auth, viewsController.productsRender)
 
 router.get('/carts/:cid', viewsController.cartsRender)
 
-router.get('/realtimeproducts', rollAdminVerify, viewsController.realTimeProductsRender)
+router.get('/realtimeproducts', rollVerify, viewsController.realTimeProductsRender)
 
 router.get('/messages', rollUserVerify, viewsController.messages)
 

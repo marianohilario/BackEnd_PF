@@ -31,6 +31,8 @@ class ProductsController {
     addProduct = async (req = request, res) => {
       const newItem = req.body
       newItem.status = true
+      newItem.owner = req.user.roll === "Admin" ? "Admin" : req.session.email
+      
       try {
         await productsService.addProduct(newItem)
         res.send({mensaje: 'Producto agregado'})

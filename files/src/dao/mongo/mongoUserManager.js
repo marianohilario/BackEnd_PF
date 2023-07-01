@@ -21,7 +21,51 @@ export class MongoUserManager{
     
     async getUser(email){
         try {
-            let user = await UserModel.findOne({email: email})
+            let user = await UserModel.findOne({"email": email})
+            return user
+        } catch (error) {
+            logger.error(error)
+        }
+    }
+
+    async getUserById(uid){
+        try {
+            let user = await UserModel.findOne({"_id": uid})
+            return user
+        } catch (error) {
+            logger.error(error)
+        }
+    }
+
+    async updateUser(email, password){
+        try {
+            logger.info('MongoUserDAO')
+            logger.info(`email MongoUserDAO: ${email}`)
+            logger.info(`password MongoUserDAO: ${password}`)
+            await UserModel.findOneAndUpdate({ "email": email }, {$set: {"password": password} })
+            let user = await UserModel.findOne({"email": email})
+            logger.info(`user: ${user}`)
+            logger.info(`user.password: ${user.password}`)
+            logger.info('Password actualizado')
+            return 'Password Updated'
+        } catch (error) {
+            logger.error(error)
+        }
+    }
+
+    async updateRoll(email, roll){
+        try {
+            let user = await UserModel.updateOne(
+                {
+                    email: email
+                },
+                {
+                    $set:
+                    {
+                        'roll': roll
+                    }
+                }
+            )
             return user
         } catch (error) {
             logger.error(error)

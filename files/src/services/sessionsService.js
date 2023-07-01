@@ -1,4 +1,4 @@
-import { MongoUserManager } from "../dao/mongo/mongoUserManager.js"
+import { MongoUserManager } from "../dao/mongo/MongoUserManager.js"
 import { UserDTO } from "../dto/users.dto.js"
 import logger from "../ultis/logger.js"
 
@@ -30,6 +30,35 @@ class SessionsService {
             return user
         } catch (error) {
             logger.error(error);
+        }
+    }
+
+    async getUserById(uid) {
+        try {
+            let user = await mongoUserManager.getUserById(uid)
+            return user
+        } catch (error) {
+            logger.error(error);
+        }
+    }
+
+    async updateUser(email, password){
+        try {
+            logger.info(`email UserService: ${email}`)
+            logger.info(`password UserService: ${password}`)
+            let user = await mongoUserManager.updateUser(email, password)
+            return user
+        } catch (error) {
+            logger.error(error)
+        }
+    }
+
+    async updateRoll(email, roll){
+        try {
+            let user = await mongoUserManager.updateRoll(email, roll)
+            return user
+        } catch (error) {
+            logger.error(error)
         }
     }
 }

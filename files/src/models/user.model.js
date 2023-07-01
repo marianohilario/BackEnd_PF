@@ -32,7 +32,11 @@ const UserSchema = Schema({
     roll:{
         type: String,
         required: true
-    }
+    },
+    carrito: {
+         type: Schema.
+         Types.ObjectId, 
+         ref: "carritos" },
 })
 
 UserSchema.pre('find', function(){
