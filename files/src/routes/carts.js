@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import CartsController from '../controllers/cartsController.js'
-import { rollUserVerify, rollPremiumVerify } from '../middleware/rollVerify.js'
+import { rollUserVerify } from '../middleware/rollVerify.js'
 import productIdValidation from '../middleware/productValidation.js'
 
 const router = Router()
@@ -11,7 +11,7 @@ router.post('/', cartsController.createCart)
 
 router.get('/:cid', cartsController.getCartProducts)
 
-router.post('/:cid/product/:pid', productIdValidation, rollPremiumVerify, rollUserVerify, cartsController.newProduct)
+router.post('/:cid/product/:pid', productIdValidation, rollUserVerify, cartsController.newProduct)
 
 router.delete('/:cid/product/:pid', rollUserVerify, cartsController.deleteProduct)
 

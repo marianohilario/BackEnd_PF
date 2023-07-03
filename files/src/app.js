@@ -8,8 +8,6 @@ import loginRouter from "./routes/login.js";
 import sessionsRouter from "./routes/sessions.js"
 import mockingRouter from './routes/mocking.js'
 import loggerRouter from './routes/logger.js'
-import mailRouter from './routes/mail.js'
-import usersRouter from './routes/user.js'
 import __dirname from "./utils.js";
 import { MongoProductManager } from "./dao/mongo/mongoProductManager.js";
 import dbConnection from "./config/dbConnection.js";
@@ -22,11 +20,6 @@ import addLogger from "./middleware/logger.js";
 import logger from "./ultis/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
-import { rollVerify } from "./middleware/rollVerify.js";
-import { validation } from "./middleware/validation.js";
-import ProductsController from "./controllers/productsController.js";
-
-const productsController = new ProductsController
 
 const app = express();
 const PORT = 8080;
@@ -78,8 +71,6 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter)
 app.use("/mockingproducts", mockingRouter)
 app.use('/loggerTest', loggerRouter)
-app.use('/api/users', usersRouter)
-app.use('/api/mail', mailRouter)
 
 const httpServer = app.listen(PORT, (err) => {
   if (err) logger.error(err);
@@ -105,7 +96,7 @@ socketServer.on("connection", async (socket) => {
   }
 
   socket.on("product", async () => {
-    await app.use("/api/products", productsRouter)
+    app.use("/api/products", productsRouter)
   });
 
   socket.on("deleteProduct", async (data) => {

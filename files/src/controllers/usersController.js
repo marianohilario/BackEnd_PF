@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken'
-import { request } from "express"
-import { createHash, isValidPassword } from "../ultis/bcryptPass.js"
-import SessionsService from "../services/sessionsService.js"
-import config from '../config/config.js';
-import logger from '../ultis/logger.js';
+const jwt = require('jsonwebtoken');
+const { request } = require( "express" );
+const { createHash, isValidPassword } = require( "../ultis/bcryptPass.js");
+const SessionsService = require( "../services/sessionsService.js");
+const config = require( '../config/config.js');
+const logger = require( '../ultis/logger.js');
 
 const sessionsService = new SessionsService
 
@@ -65,4 +65,4 @@ class UserController{
     }
 }
 
-export default UserController
+module.exports = UserController

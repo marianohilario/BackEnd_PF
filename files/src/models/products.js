@@ -37,7 +37,7 @@ const productsSchema = Schema({
     },
     owner: {
       type: String,
-      required: true
+      required: true,
     },
 })
 

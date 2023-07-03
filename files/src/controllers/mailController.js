@@ -1,13 +1,13 @@
 import { request } from "express";
-import { createTransport } from 'nodemailer'
-import config from '../config/config.js';
+import { createTransport } from 'nodemailer';
+import { testMailAdmin, testMailPass } from '../config/config.js';
 import { generateToken } from "../ultis/jwt.js";
 import SessionsService from "../services/sessionsService.js";
-import logger from "../ultis/logger.js";
+import { logger } from "../ultis/logger.js";
 
 const sessionsService = new SessionsService
 
-export class MailController {
+class MailController {
     mailRender = async (req = request, res) => {
         res.render('mail')
     }
@@ -28,13 +28,13 @@ export class MailController {
                 service: 'gmail',
                 port: 578,
                 auth: {
-                    user: config.testMailAdmin,
-                    pass: config.testMailPass
+                    user: testMailAdmin,
+                    pass: testMailPass
                 }
             })
 
             let result = await transport.sendMail({
-                from:`Ecommerce - Recuperación de Pass <${config.testMailAdmin}>`,
+                from:`Ecommerce - Recuperación de Pass <${testMailAdmin}>`,
                 to: email,
                 subject: 'Recuperar contraseña',
                 html: `
@@ -51,3 +51,5 @@ export class MailController {
         }
     }
 }
+
+export default MailController
