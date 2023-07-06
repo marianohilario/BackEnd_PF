@@ -1,0 +1,3 @@
+node_modules
+
+#no se ignoran los .env para que puedan corregir los tutores y profe
