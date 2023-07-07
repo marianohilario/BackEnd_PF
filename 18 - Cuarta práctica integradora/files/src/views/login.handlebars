@@ -1,0 +1,17 @@
+<div>
+    <h2>Inicia Sesion</h2>
+
+    <form action="http://localhost:8080/auth/login" method="post">
+        <p>Email</p>
+        <input type="text" name="username" id="email" placeholder="correo@correo.com">
+
+        <p>Password</p>
+        <input type="text" name="password" id="password" placeholder="************">
+
+        <button type="submit" id="btn">Iniciar Sesión</button>
+        <a href="http://localhost:8080/auth/github" id="btnGit">Iniciar Sesión con Github</a>
+        <a href="http://localhost:8080/api/mail" id="btnGit">Restablecer Contraseña</a>
+    </form>
+</div>
+
+<script src="/public/js/login.js"></script>
