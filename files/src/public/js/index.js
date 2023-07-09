@@ -35,8 +35,6 @@ const contenedor = document.querySelector('#container')
 
 deleteBtn.addEventListener('click', (event)=>{
     event.preventDefault()
-    console.log('escucha');
-    console.log(productID.value);
     formDelete.setAttribute('action', `http://localhost:8080/api/products/${productID.value}?_method=DELETE`)
 
     formDelete.submit()

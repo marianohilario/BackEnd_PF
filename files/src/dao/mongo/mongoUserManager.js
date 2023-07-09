@@ -74,7 +74,6 @@ export class MongoUserManager{
 
     async uploadDocument(uid, data){
         try {
-            console.log('dataManager', data);
             let user = await UserModel.updateOne(
                 {
                     _id: uid
@@ -88,7 +87,7 @@ export class MongoUserManager{
             )
             return user
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 
@@ -107,7 +106,7 @@ export class MongoUserManager{
             )
             return user
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 }

@@ -64,11 +64,10 @@ class SessionsService {
 
     async uploadDocument(uid, data){
         try {
-            console.log('dataService', data);
             let user = await mongoUserManager.uploadDocument(uid, data)
             return user
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 
@@ -77,7 +76,7 @@ class SessionsService {
             let user = await mongoUserManager.updateLastConnection(email, data)
             return user
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 }

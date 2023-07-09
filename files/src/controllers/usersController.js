@@ -13,7 +13,6 @@ class UserController{
 
         try {
             let user = await sessionsService.getUserById(uid)
-
             if (!user) {
                 res.send({
                     status: 'error', 
@@ -21,14 +20,15 @@ class UserController{
                 })
             } 
             if (user.roll === 'user') {
-                //let user = await userService.getUser(uemail)
-                let identificacion = user.documents.find(document => document.name == 'Identificacion')
-                let comprobanteDomicilio = user.documents.find(document => document.name == 'Comprobante de domicilio')
-                let comprobanteEstadoCuenta = user.documents.find(document => document.name == 'Comprobante de estado de cuenta')
-                if (!identificacion || !comprobanteDomicilio || !comprobanteEstadoCuenta) res.send({status: 'error', message: 'No ha terminado de procesar su documentación'})
+                if (!user.documents || user.documents.length < 3) {
+                    return res.status(400).send({
+                        status: 'error',
+                        error: `No ha terminado de procesar su documentación, le falta cargar ${3 - user.documents.length} ${3 - user.documents.length > 1 ? 'documentos' : 'documento'}.`
+                    })
+                }
+                
             }
-
-            let newUser = await sessionsService.updateRoll(user.email, `${req.session.premium ? 'user' : 'premium'}`)
+            let newUser = await sessionsService.updateRoll(user.email, `${user.roll === 'premium' ? 'user' : 'premium'}`)
             res.send({status: 'success', data: newUser})
             
         } catch (error) {
@@ -67,26 +67,36 @@ class UserController{
         }
     }
 
-    uploadDocument = async (req = request, res) => {
-        const {name} = req.body
-        console.log(req.body);
-        const {uid} = req.params
-        try {
-            if (!req.file) res.status(400).send({status: error, error: "No se pudo guardar la imagen"})
-            
-            let userData = await sessionsService.getUserById(uid)
-            console.log('userData: ', userData)
-            if (!userData.documents || userData.documents == []) {
-                let user = await sessionsService.uploadDocument(uid, [{name, reference: req.file.path}])
-                res.send({status: 'ok', link: req.file.path, user})
+    documentsRender = (req = request, res) => {
+        res.render('profile')
+    }
+
+    uploadDocuments = async (req = request, res) => {
+        const file = req.files
+        if (file[0].fieldname === 'documents') {
+            try {
+                const {uid} = req.params
+                if (!file) res.status(400).send({status: error, error: "No se pudo guardar la imagen"})
+                
+                let userData = await sessionsService.getUserById(uid)
+                if (!userData) res.status(404).send({error: 'Usuario no encontrado'})
+                
+                userData.documents = userData.documents || []
+                
+                file.forEach((file) => {
+                    userData.documents.push({
+                        name: file.filename,
+                        reference: file.destination
+                    })
+                })
+                
+                let user = await sessionsService.uploadDocument(uid, userData.documents)
+                    res.send({status: 'ok', link: req.files.path, user})
+            } catch (error) {
+                logger.error(error)
             }
-            let documents = userData.documents
-            documents.push({name, reference: req.file.path})
-            console.log('documents: ', documents)
-            let user = await sessionsService.uploadDocument(uid, documents)
-            res.send({status: 'ok', link: req.file.path, user})
-        } catch (error) {
-            console.log(error)
+        } else {
+            res.send({message: 'Image uploaded successfully'})
         }
     }
 }

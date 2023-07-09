@@ -36,17 +36,14 @@ const UserSchema = Schema({
     carrito: {
          type: Schema.
          Types.ObjectId, 
-         ref: "carritos" },
-    documents:{
-        type: [{
-            name:{
-                type: String
-            },
-            reference:{
-                type: String
-            }
-        }]
+         ref: "carritos" 
     },
+    documents:[
+        {
+            name: String,
+            reference: String
+        }
+    ],
     last_connection:{
         type: Date
          }
