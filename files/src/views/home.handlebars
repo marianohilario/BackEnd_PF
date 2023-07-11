@@ -8,24 +8,75 @@
     </div>
     
     <h2>Todos los Productos</h2>
-    {{#each productos}}
-        <div>
-            <h3>{{this.title}}</h3>
-            <p>{{this.description}}</p>
-            <p>Category: {{this.category}}</p>
-            <p>Price: {{this.price}}</p>
-        </div>
-        
-        <form action="/api/carts/{{../usercart}}/product/{{this._id}}" method="post">
-            <button type="submit">Agragar al carrito</button>
-        </form>
-    {{/each}}
 
-    {{#if hasPrevPage}}
-        <a href="/products?page={{prevPage}}&&limit={{limit}}"><button>Anterior</button></a>
-    {{/if}}
-    <p>{{page}}</p>
-    {{#if hasNextPage}}
-        <a href="/products?page={{nextPage}}&&limit={{limit}}"><button>Siguiente</button></a>
-    {{/if}}
+    {{#each productos}}
+    <div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-3 d-flex">
+            <img src="{{ thumbnail }}" class="img-fluid rounded-start mx-auto my-auto" alt="..." style="max-height: 170px;">
+        </div>
+        <div class="col-md-9">
+        <div class="card-body">
+            <form  action="/api/carts/{{../usercart}}/product/{{this._id}}" method="post">
+                <h5 class="card-title"> <b> {{ title }} </b> </h5>
+                <p class="card-text">{{ description }}</p>
+                <div class="row">
+                    <div class="col-6 fs-4 text">
+                       <b> $ {{ price }} </b>
+                    </div>
+                    <div class="col-4 align-items-center d-flex justify-content-end">
+                        <span class="card-text"><small class="ms-3 text-body-secondary"> Stock disponible: {{ stock }} </small></span>
+                    </div>
+                    <div class="col d-flex justify-content-end">                        
+                        <select class="form-select mb-2" id="exampleSelect1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="col-10"></div>
+                    <div class="col d-flex justify-content-end">
+                        <button class="btn btn-primary" type="submit">Add to cart</button>
+                    </div>
+                </div>
+                <div class="d-flex d-flex justify-content-center">
+                    
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+    {{/each}}
+    </div>
+
+    <div>
+        <ul class="pagination pagination-sm">
+            {{#if hasPrevPage}}
+            <li class="page-item">
+                <a class="page-link" href="/?page={{prevPage}}&&limit={{limit}}">&laquo;</a>
+            </li>
+            {{/if}}
+            {{#if hasPrevPage}}
+            <li class="page-item">
+                <a class="page-link" href="/?page={{prevPage}}&&limit={{limit}}">{{prevPage}}</a>
+            </li>
+            {{/if}}
+            <li class="page-item active">
+                <a class="page-link" href="#">{{page}}</a>
+            </li>
+            {{#if hasNextPage}}
+            <li class="page-item">
+                <a class="page-link" href="/?page={{nextPage}}&&limit={{limit}}">{{nextPage}}</a>
+            </li>
+            {{/if}}
+            {{#if hasNextPage}}
+            <li class="page-item">
+                <a class="page-link" href="/?page={{nextPage}}&&limit={{limit}}">&raquo;</a>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
 </div>

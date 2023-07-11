@@ -35,7 +35,7 @@ class LoginController {
                 req.logger.info('Usted es admin')
                 let last_connection = new Date
                 await sessionsService.updateLastConnection(req.user.email, last_connection)
-                res.redirect('http://localhost:8080/products')
+                res.redirect('http://localhost:8080/')
             } else {
                 req.session.user = req.user.first_name
                 req.session.email = req.user.email
@@ -46,7 +46,7 @@ class LoginController {
                 req.logger.info('Usted es usuario')
                 let last_connection = new Date
                 await sessionsService.updateLastConnection(req.user.email, last_connection)
-                res.redirect('http://localhost:8080/products')
+                res.redirect('http://localhost:8080/')
             }
         } catch (error) {
             req.logger.error(error)

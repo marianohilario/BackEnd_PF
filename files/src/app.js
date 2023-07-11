@@ -1,66 +1,92 @@
 import express from "express";
 import handlebars from "express-handlebars";
 import session from "express-session";
-import productsRouter from "./routes/products.js";
-import cartsRouter from "./routes/carts.js";
-import viewsRouter from "./routes/views.js";
-import loginRouter from "./routes/login.js";
-import sessionsRouter from "./routes/sessions.js"
-import mockingRouter from './routes/mocking.js'
-import loggerRouter from './routes/logger.js'
-import mailRouter from './routes/mail.js'
-import usersRouter from './routes/user.js'
-import __dirname from "./utils.js";
+import router from "./routes/index.js";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { MongoProductManager } from "./dao/mongo/mongoProductManager.js";
-import dbConnection from "./config/dbConnection.js";
+import dbConnection from "./config/database.js";
 import chatModel from "./models/messages.js";
 import { Server } from "socket.io";
 import { initPassport } from "./config/passport.js";
 import passport from "passport";
-import errorMiddleware from './middleware/error.js'
+import errorMiddleware from "./middleware/error.js";
 import addLogger from "./middleware/logger.js";
-import logger from "./ultis/logger.js";
+import logger from "./utils/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
-import methodOverride from "method-override"
-
-
-const app = express();
-const PORT = 8080;
-
-dbConnection();
+import methodOverride from "method-override";
+import config from "./config/config.js";
+import command from "../process.js";
 
 const productManager = new MongoProductManager();
 
+// Initialize
+const app = express();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dbConnection();
+
+// Settings
 app.use(express.json());
+app.use(addLogger);
+app.set("views", join(__dirname, "views"));
+const hbs = handlebars.create({
+  defaultLayout: "main",
+  layoutsDir: join(app.get("views"), "layouts"),
+  partialsDir: join(app.get("views"), "partials"),
+  extname: ".handlebars",
+});
+app.engine(".handlebars", hbs.engine);
+app.set("view engine", ".handlebars");
+
+// Middlewares
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'))
-
-app.use(session({
-    secret: 'secretCoder',
+app.use(methodOverride("_method"));
+app.use(
+  session({
+    secret: "secretCoder",
     resave: false,
-    saveUninitialized: false
-}))
+    saveUninitialized: false,
+  })
+);
+initPassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
-initPassport()
-app.use(passport.initialize())
-app.use(passport.session())
 
-app.use(errorMiddleware)
-app.use(addLogger)
+// Global Variables
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
 
-app.use("/public", express.static(__dirname + "/public"));
 
-app.engine("handlebars", handlebars.engine());
-app.set("views", __dirname + "/views");
-app.set("view engine", "handlebars");
+// Routes
+app.use("/", router);
+
+
+// Static Files
+app.use(express.static(join(__dirname, "public")));
+
+
+// Server Listenning
+const httpServer = app.listen(config.port, (err) => {
+  if (err) logger.error(err);
+  logger.info(
+    `Listening on port ${config.port} in ${command.opts().mode} environment`
+  );
+});
+
+
+app.use(errorMiddleware);
 
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
       title: "Documentación ecommerce curso Backend",
-      description: "Proyecto desarrollado para el curso de Backend de CoderHouse.",
+      description:
+        "Proyecto desarrollado para el curso de Backend de CoderHouse.",
     },
   },
   apis: [`${__dirname}/docs/**/*.yaml`],
@@ -68,21 +94,6 @@ const swaggerOptions = {
 
 const specs = swaggerJSDoc(swaggerOptions);
 app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
-
-app.use("/", viewsRouter);
-app.use('/auth', loginRouter)
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/api/sessions", sessionsRouter)
-app.use("/mockingproducts", mockingRouter)
-app.use('/loggerTest', loggerRouter)
-app.use('/api/users', usersRouter)
-app.use('/api/mail', mailRouter)
-
-const httpServer = app.listen(PORT, (err) => {
-  if (err) logger.error(err);
-  logger.info("Escuchando puerto: " + PORT);
-});
 
 httpServer.on;
 
@@ -103,7 +114,7 @@ socketServer.on("connection", async (socket) => {
   }
 
   socket.on("product", async () => {
-    await app.use("/api/products", productsRouter)
+    await app.use("/api/products", productsRouter);
   });
 
   socket.on("deleteProduct", async (data) => {

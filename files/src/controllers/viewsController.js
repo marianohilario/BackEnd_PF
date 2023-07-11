@@ -10,7 +10,10 @@ class ViewsController {
         query ? filtro = {category: query} : filtro = {}
         try {
             const { docs, hasPrevPage, hasNextPage, prevPage, nextPage } = await viewsService.getProducts(limit, page, filtro, sort)
-    
+            const docsAux = docs.map( (elemet) => {
+                elemet.description = `${elemet.description.substring(0,75)} ...`
+                elemet.price = elemet.price.toLocaleString("es-AR");
+            })
             let datos = {
                 productos: docs,
                 hasPrevPage,

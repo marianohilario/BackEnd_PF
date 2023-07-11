@@ -1,7 +1,10 @@
 import multer from 'multer'
 import fs from 'fs'
-import path from 'path'
-import __dirname from '../utils.js'
+import { dirname, join } from 'path';
+import { fileURLToPath } from "url";
+
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

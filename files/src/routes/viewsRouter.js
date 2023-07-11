@@ -7,7 +7,7 @@ const router = Router()
 
 const viewsController = new ViewsController
 
-router.get('/products', auth, viewsController.productsRender)
+router.get('/', viewsController.productsRender)
 
 router.get('/carts/:cid', viewsController.cartsRender)
 
