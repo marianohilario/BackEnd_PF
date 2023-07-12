@@ -25,21 +25,21 @@ export class MongoCartManager {
             $set: {
               "products.$[pid]": {
                 pid: pid,
-                quantity: quantity ? quantity : product.quantity + 1,
+                quantity: product.quantity + parseInt(quantity),
               },
             },
           },
           {
             arrayFilters: [{ "pid.pid": pid }],
           }
-        );
+        )
         return cart;
       }
 
-      if (product == undefined) {
+      if (product === undefined) {
         const cart = await cartsModel.findByIdAndUpdate(
           { _id: cid },
-          { $push: { products: { pid: pid, quantity: 1 } } }
+          { $push: { products: { pid: pid, quantity: parseInt(quantity) } } }
         );
         return cart;
       }

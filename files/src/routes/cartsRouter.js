@@ -9,10 +9,10 @@ const cartsController = new CartsController
 
 router.post('/', cartsController.createCart)
 
-router.get('/:cid', cartsController.getCartProducts)
+router.get('/:cid', cartsController.cartProducts)
 
-router.post('/:cid/product/:pid', cartsController.newProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de abajo.
-//router.post('/:cid/product/:pid', productIdValidation, rollPremiumVerify, rollUserVerify, cartsController.newProduct)
+//router.post('/:cid/product/:pid', cartsController.addProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de abajo.
+router.post('/:cid/product/:pid', productIdValidation, rollPremiumVerify, rollUserVerify, cartsController.addProduct)
 
 router.delete('/:cid/product/:pid', cartsController.deleteProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de abajo.
 //router.delete('/:cid/product/:pid', rollUserVerify, cartsController.deleteProduct)

@@ -16,10 +16,8 @@ export function rollUserVerify(req, res, next) {
 }
 
 export async function rollPremiumVerify(req, res, next) {
-    console.log(req.params);
     let pid = req.params.pid
     let product = await productsService.getProductById(pid)
-    console.log(product);
     if (req.session.roll === 'premium' && req.session.email === product.owner) return res.status(401).send('Usted no puede adquirir su propio producto')
     return next()
 }

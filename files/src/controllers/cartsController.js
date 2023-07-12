@@ -1,4 +1,3 @@
-import { request } from 'express'
 import CartsService from '../services/cartsService.js'
 import ProductsService from '../services/productsService.js'
 import TicketService from '../services/ticketService.js'
@@ -8,7 +7,7 @@ const productsService = new ProductsService
 const ticketService = new TicketService
 
 class CartsController {
-    createCart = async (req = request, res) => {
+    createCart = async (req, res) => {
         try {
             await cartsService.createCart()
             res.status(201).send({mensaje: 'Carrito creado'})
@@ -17,7 +16,7 @@ class CartsController {
         }
     }
 
-    getCartProducts = async (req = request, res) => {
+    cartProducts = async (req, res) => {
         const { cid } = req.params
         const {limit = 1 , page = 1, query} = req.query
 
@@ -29,17 +28,18 @@ class CartsController {
         }
     }
 
-    newProduct = async (req = request, res) => {
+    addProduct = async (req, res) => {
         const { cid, pid } = req.params
+        const { select } = req.body
         try {
-            await cartsService.uploadProduct(cid, pid)
+            await cartsService.uploadProduct(cid, pid, select)
             res.status(201).send({mensaje: "Producto agregado al carrito"})
         } catch (error) {
             res.status(200).send({mensaje: "No se pudo agregar el producto al carrito"})
         }
     }
 
-    deleteProduct = async (req = request, res) => {
+    deleteProduct = async (req, res) => {
         const { cid, pid } = req.params
 
         try {
@@ -50,7 +50,7 @@ class CartsController {
         }
     }
 
-    uploadProduct = async (req = request, res) => {
+    uploadProduct = async (req, res) => {
         const { cid, pid } = req.params
         const {quantity} = req.body
 
@@ -62,7 +62,7 @@ class CartsController {
         }
     }
 
-    deleteCartProducts = async (req = request, res) => {
+    deleteCartProducts = async (req, res) => {
         const { cid, pid } = req.params
 
         try {
@@ -74,7 +74,7 @@ class CartsController {
         }
     }
 
-    arrayProductsUpdate = async (req = request, res) => {
+    arrayProductsUpdate = async (req, res) => {
         const { cid } = req.params
         const data = req.body
 
@@ -88,7 +88,7 @@ class CartsController {
         }
     }
 
-    createTicket = async (req = request, res) => {
+    createTicket = async (req, res) => {
         const { cid } = req.params
         const { limit = 1, page = 1, query } = req.query
 
