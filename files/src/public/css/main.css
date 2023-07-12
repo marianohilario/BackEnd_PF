@@ -23,3 +23,13 @@
     padding-left: 0;
     list-style: none
 }
+
+a {
+    color: #95a5a6;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #7f8c8d;
+
+}

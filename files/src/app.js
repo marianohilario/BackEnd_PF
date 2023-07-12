@@ -16,6 +16,7 @@ import logger from "./utils/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 import methodOverride from "method-override";
+import flash from "connect-flash";
 import config from "./config/config.js";
 import command from "../process.js";
 
@@ -52,11 +53,14 @@ app.use(
 initPassport();
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 
 // Global Variables
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
   next();
 });
 

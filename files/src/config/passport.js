@@ -41,23 +41,24 @@ export const initPassport = () => {
             email: profile._json.email,
           });
           if (!user) {
+            const cart = await mongoCartManager.createCart();
             let newUser = {
               first_name: profile.username,
               last_name: profile.username,
               age: 41,
               roll: "user",
               email: profile._json.email,
+              cart: cart._id,
               password: createHash("asd123"),
             };
 
             let result = await sessionsService.addUser(newUser);
 
             return done(null, result);
+          } else {
+            return done(null, user)
           }
-
-          return done(null, user);
         } catch (error) {
-          logger.error(error);
           return done(error);
         }
       }
@@ -67,18 +68,18 @@ export const initPassport = () => {
   passport.use(
     "login",
     new localStrategy(
-      { usernameField: "username" },
-      async (username, password, done) => {
+      { usernameField: "email" },
+      async (email, password, done) => {
         try {
-          let user = await sessionsService.getUser(username);
+          let user = await sessionsService.getUser(email);
 
           if (!user) {
-            logger.error("Error al loguearse. El usuario no existe");
+            logger.error("Not user found");
             return done(null, false);
           }
 
           if (!isValidPassword(user, password)) {
-            logger.error("Error al loguearse. Password invalido");
+            logger.error("Invalid Password");
             return done(null, false);
           }
 
@@ -86,51 +87,6 @@ export const initPassport = () => {
         } catch (error) {
           logger.error(error);
           return done(error);
-        }
-      }
-    )
-  );
-
-  passport.use(
-    "register",
-    new localStrategy(
-      {
-        passReqToCallback: true,
-        usernameField: "email",
-      },
-
-      async (req, username, password, done) => {
-        const { first_name, last_name, age, roll = "user", email } = req.body;
-
-        if (username === config.adminName && password === config.adminPassword)
-          roll = "admin";
-
-        try {
-          let exist = await sessionsService.getUser(username);
-
-          if (exist) {
-            logger.warning(
-              "Error al registrarse. El correo electrónico ya se encuentra registrado"
-            );
-            return done(null, false);
-          } else {
-            let cart = await mongoCartManager.createCart();
-            let user = {
-              first_name,
-              last_name,
-              age,
-              roll,
-              email,
-              cart: cart._id,
-              password: createHash(password),
-            };
-            let result = await sessionsService.addUser(user);
-            logger.info("Usuario creado correctamente: " + result);
-            return done(null, result);
-          }
-        } catch (error) {
-          logger.error("Error al obtener el usuario" + error);
-          return done("Error al obtener el usuario" + error);
         }
       }
     )
