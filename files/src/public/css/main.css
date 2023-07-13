@@ -31,5 +31,17 @@ a {
 
 a:hover {
     color: #7f8c8d;
+}
 
+.text-remove {
+    color: rgb(0, 0, 208);
+    text-decoration: underline;
+}
+
+.removeBtn {
+    border: none;
+    background-color: transparent;
+    font-size: 0.85rem;
+    color: rgb(0, 0, 255);
+    text-decoration: underline;
 }

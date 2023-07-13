@@ -33,6 +33,7 @@ const contenedor = document.querySelector('#container')
 //     await productsController.addProduct
 // })
 
+
 deleteBtn.addEventListener('click', (event)=>{
     event.preventDefault()
     formDelete.setAttribute('action', `http://localhost:8080/api/products/${productID.value}?_method=DELETE`)

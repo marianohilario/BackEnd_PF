@@ -48,12 +48,13 @@ export class MongoCartManager {
     }
   }
 
-  async getCartProducts(cid, limit, page) {
+  async cartProducts(cid, limit, page) {
     try {
       const cartProducts = await cartsModel.paginate(
         { _id: cid },
         { limit: limit, page: page, lean: true }
       );
+
       return cartProducts;
     } catch (error) {
       logger.error(error);
@@ -63,7 +64,7 @@ export class MongoCartManager {
   async deleteProduct(cid, pid) {
     try {
       let carrito = await cartsModel.findOne({ _id: cid });
-      let products = carrito.products.filter((product) => product.pid != pid);
+      let products = carrito.products.filter((product) => product.pid !== pid);
       await cartsModel.updateOne(
         {
           _id: cid,

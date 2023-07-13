@@ -10,7 +10,7 @@ class ViewsService {
     }
 
     async getCartProducts(cid, limit, page) {
-        return await mongoCartManager.getCartProducts(cid, limit, page)
+        return await mongoCartManager.CartProducts(cid, limit, page)
     }
 }
 

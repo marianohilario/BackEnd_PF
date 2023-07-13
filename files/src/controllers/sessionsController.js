@@ -1,15 +1,8 @@
-import { request } from 'express'
-import SessionsService from '../services/sessionsService.js'
-
-const sessionsService = new SessionsService
-
 class SessionsController {
-    current = async (req = request, res) =>{
+    current = async (req, res) =>{
 
         try {
-            let email = req.user.email
-            let user = await sessionsService.getUser(email)
-            res.send(user)
+            res.send(req.user)
         } catch (error) {
             req.logger.error(error)
         }

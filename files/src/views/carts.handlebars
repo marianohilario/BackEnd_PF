@@ -1,20 +1,84 @@
 <div>
-    <h2>Todos los Productos Del Carrito</h2>
-    
-    {{#each productos}}
-        <div>
-            <h3>{{this.pid.title}}</h3>
-            <p>{{this.pid.description}}</p>
-            <p>{{this.pid.category}}</p>
-            <p>{{this.pid.stock}}</p>
+    <h2>Cart Products</h2>
+    <div class="row">
+        {{#if productos}}
+        <div class="col-md-8">
+            <div class="card bg-primary pb-2">
+                <div class="row mx-3 mt-3">
+                    {{#each productos}}
+                    <div class="card mb-2">
+                        <div class="row g-0">
+                            <div class="col-md-2 d-flex">
+                                <img src="{{thumbnail}}" class="img-fluid rounded-start mx-auto my-auto" alt="{{title}}"  style="max-height: 170px;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">{{ title }}</h5>
+                                    <p class="card-text mb-1"> Quantity: <b> {{ quantity }} </b> </p>
+                                    <p class="card-text"> Price: <b> $ {{ price }} </b> </p>
+                                    <div class="text-end">
+                                        <form action="/api/carts/{{../cart}}/product/{{pid}}?_method=DELETE" method="POST">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <input class="removeBtn" type="submit" id="removeProduct" value="Remove">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex justify-content-center align-items-center fs-5">
+                                <b> $ {{ subTotal }} </b>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
         </div>
-    {{/each}}
+        {{else}}
+        <div class="col-md-8">
+            <div class="card bg-primary pb-2">
+                <div class="row mx-3 mt-3">
+                    <div class="card mb-2">
+                        <div class="row g-0">
+                            <div class="col-md">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">The cart is empty...</h5>
+                                </div>
+                            </div>        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
 
-    {{#if hasPrevPage}}
-        <a href="/products?page={{prevPage}}&&query={{query}}&&limit={{limit}}"><button>Anterior</button></a>
-    {{/if}}
-    <p>{{page}}</p>
-    {{#if hasNextPage}}
-        <a href="/products?page={{nextPage}}&&query={{query}}&&limit={{limit}}"><button>Siguiente</button></a>
-    {{/if}}
+
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Purchase Summary
+                </div>
+                <div class="card-body">
+                    <a href="#" class="btn btn-primary w-100 mb-4">Go to checkout</a>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p>Items({{items}})</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <p>$ {{ amount }}</p>
+                        </div>
+                        <div class="col-md-8">
+                            <p>Shipping</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <p>Free</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <p class="text-center fs-3 mb-0"> <b> $ {{ amount }} </b> </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

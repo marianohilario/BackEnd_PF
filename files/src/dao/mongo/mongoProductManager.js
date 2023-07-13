@@ -35,12 +35,10 @@ export class MongoProductManager {
 
   async getProductById(pid) {
     try {
-      const data = await productsModel.find();
-
-      return data.find((product) => product.id == pid);
+      const product = await productsModel.findOne({ _id: pid });
+      return product;
     } catch (error) {
       req.logger.error(error);
-      //console.log(error)
     }
   }
 
