@@ -8,11 +8,11 @@ export function rollVerify(req, res, next) {
     return res.status(401).send('Usted no es administrador o usuario premium')
 }
 
-export function rollUserVerify(req, res, next) {
+export function userLogged(req, res, next) {
     if (req.session?.usuario) {
         return next()
     }
-    return res.status(401).send('Usted no es usuario')
+    return res.status(401).send('You are not a logged user')
 }
 
 export async function rollPremiumVerify(req, res, next) {
