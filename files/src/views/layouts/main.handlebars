@@ -15,6 +15,12 @@
 <body>
     {{> navigation }}
     <main class="container p-5">
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4 offset-md-4 m-0">
+                {{> messages }}
+            </div>
+        </div>
         {{{body}}}
     </main>
 

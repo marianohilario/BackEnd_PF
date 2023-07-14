@@ -1,10 +1,10 @@
 <div>
     <div>
     {{#if user}}
-    <h3>Bienvenido {{username}}</h3>
+    <h3>Wellcome {{username}}</h3>
     {{/if}}
 
-    <h4>Productos</h4>
+    <h4>Products</h4>
 
     {{#each productos}}
     <div class="card mb-3">
@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-9">
         <div class="card-body">
-            <form  action="/api/carts/{{../usercart}}/product/{{this._id}}" method="post">
+            <form  action="/api/carts/{{../cart}}/product/{{this._id}}" method="post">
                 <h5 class="card-title"> <b> {{ title }} </b> </h5>
                 <p class="card-text">{{ description }}</p>
                 <div class="row">
@@ -22,7 +22,7 @@
                        <b> $ {{ price }} </b>
                     </div>
                     <div class="col-4 align-items-center d-flex justify-content-end">
-                        <span class="card-text"><small class="ms-3 text-body-secondary"> Stock disponible: {{ stock }} </small></span>
+                        <span class="card-text"><small class="ms-3 text-body-secondary"> Available stock : {{ stock }} </small></span>
                     </div>
                     <div class="col d-flex justify-content-end">                        
                         <select class="form-select mb-2" id="exampleSelect1" name="select">
@@ -36,7 +36,7 @@
                     <div class="col-10"></div>
                     <div class="col d-flex justify-content-end">
                     {{#if ../user}}
-                        <form action="/api/carts/{{../usercart}}/product/{{this._id}}" method="post">
+                        <form action="/api/carts/{{cart}}/product/{{this._id}}" method="post">
                             <button class="btn btn-primary" type="submit">Add to cart</button>
                         </form>
                     {{else}}

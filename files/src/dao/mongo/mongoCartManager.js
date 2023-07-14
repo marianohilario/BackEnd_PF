@@ -80,7 +80,7 @@ export class MongoCartManager {
     }
   }
 
-  async deleteCartProducts(cid) {
+  async clearCart(cid) {
     try {
       let products = [];
 

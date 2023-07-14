@@ -4,9 +4,9 @@ import logger from "../utils/logger.js";
 const ticketManager = new TicketManager();
 
 class TicketService {
-  async createTicket(code, purchase_datetime, amount, purchaser) {
+  async purchaseTicket(code, purchase_datetime, amount, purchaser) {
     try {
-      return await ticketManager.createTicket(
+      return await ticketManager.purchaseTicket(
         code,
         purchase_datetime,
         amount,

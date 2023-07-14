@@ -7,22 +7,32 @@ const router = Router()
 
 const cartsController = new CartsController
 
+// Create Cart
 router.post('/', cartsController.createCart)
 
+// Get Cart Products
 router.get('/:cid', cartsController.cartProducts)
 
-//router.post('/:cid/product/:pid', cartsController.addProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de abajo.
+// Add Products to Cart
 router.post('/:cid/product/:pid', productIdValidation, rollPremiumVerify, userLogged, cartsController.addProduct)
+//router.post('/:cid/product/:pid', cartsController.addProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de arriba.
 
-//router.delete('/:cid/product/:pid', cartsController.deleteProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de abajo.
+// Remove Product from Cart
 router.delete('/:cid/product/:pid', userLogged, cartsController.deleteProduct)
+//router.delete('/:cid/product/:pid', cartsController.deleteProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de arriba.
 
+// Clear Cart
+router.delete('/:cid', cartsController.clearCart)
+
+// Create Purchase Ticket
+router.get('/:cid/purchase', userLogged, cartsController.purchaseTicket)
+
+
+
+//---------------------No los usé--------------------
 router.put('/:cid/product/:pid', cartsController.uploadProduct)
-
-router.delete('/:cid', cartsController.deleteCartProducts)
 
 router.put('/:cid', cartsController.arrayProductsUpdate)
 
-router.get('/:cid/purchase', userLogged, cartsController.createTicket)
 
 export default router

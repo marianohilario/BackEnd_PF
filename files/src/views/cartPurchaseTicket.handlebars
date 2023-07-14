@@ -1,15 +1,16 @@
 <div>
     <div class="row">
         <div class="col-md-6">
-            <h2>Shopping cart</h2>
+            <h2>Thanks for your purchase</h2>
         </div>
-        {{#if productos}}
-            <div class="col-md-2 d-flex align-items-end pe-3 justify-content-end mb-2">
+        {{#if exceededStock}}
+            <p>Part of your purchase has been successfully processed</p>
+            {{!-- <div class="col-md-2 d-flex align-items-end pe-3 justify-content-end mb-2">
                 <form action="/api/carts/{{cart}}?_method=DELETE" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                     <input class="removeBtn" type="submit" id="removeProduct" value="Empty cart">
                 </form>
-            </div>
+            </div> --}}
         {{/if}}
     </div>
     <div class="row">

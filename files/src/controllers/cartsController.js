@@ -61,7 +61,7 @@ class CartsController {
             }
             
         } catch (error) {
-            res.status(200).send({mensaje: 'The cart does not exist'})
+            res.status(200).send({mensaje: 'Cart does not exist'})
         }
 
     }
@@ -69,8 +69,10 @@ class CartsController {
     addProduct = async (req, res) => {
         const { cid, pid } = req.params
         const { select } = req.body
+        console.log(select);
         try {
             await cartsService.uploadProduct(cid, pid, select)
+            req.flash('success_msg', 'Product added successfully')
             res.status(201).redirect('/')
         } catch (error) {
             res.status(200).send({mensaje: "Could not add product to cart"})
@@ -82,6 +84,7 @@ class CartsController {
 
         try {
             await cartsService.deleteProduct(cid, pid)
+            req.flash('success_msg', 'Product removed successfully')
             res.status(201).redirect(`/api/carts/${cid}`)
         } catch (error) {
             res.status(200).send({mensaje: "Could not remove product from cart"})
@@ -100,12 +103,12 @@ class CartsController {
         }
     }
 
-    deleteCartProducts = async (req, res) => {
+    clearCart = async (req, res) => {
         const { cid, pid } = req.params
 
         try {
-            await cartsService.deleteCartProducts(cid)
-            res.status(201).send({mensaje: "Todos los productos fueron eliminados del carrito"})
+            await cartsService.clearCart(cid)
+            res.status(201).redirect(`/api/carts/${cid}`)
             
         } catch (error) {
             res.status(200).send({mensaje: "No se pudo eliminar los productos del carrito"})
@@ -126,48 +129,59 @@ class CartsController {
         }
     }
 
-    createTicket = async (req, res) => {
+
+    purchaseTicket = async (req, res) => {
         const { cid } = req.params
         const { limit = 1, page = 1, query } = req.query
 
         try {
             let exceededStock = []
+            let leftInCart = []
             let amount = 0
+            let cartItems = 0
 
             const cartProducts = await cartsService.cartProducts(cid, limit, page)
-            if(!cartProducts.docs[0].products[0]) return res.status(401).send({status: 'No hay productos en el carrito', error: cartProducts})
+            const cart = cartProducts.docs[0].id
+            if(!cartProducts.docs[0].products[0]) {
+                req.flash('error_msg', 'There are no products in the cart')
+                return res.status(401).redirect(`/api/carts/${cid}`)
+            }
 
             for (const product of cartProducts.docs[0].products) {
                 const dbProduct = await productsService.getProductById(product.pid)
                 if(product.quantity <= dbProduct.stock) {
                     dbProduct.stock -= product.quantity
-
                     amount += (dbProduct.price * product.quantity)
-
                     const { title, description, code, price, status, stock, category, thumbnail} = dbProduct
-
                     const obj = { title, description, code, price, status, stock, category, thumbnail}
-
                     await productsService.updateProduct(product.pid, obj)
-                
                 } else {
-                    exceededStock.push(product)
-                    req.logger.info(exceededStock)
+                    exceededStock.push(dbProduct)
+                    leftInCart.push(product)
                 }
             }
 
-            if(exceededStock.length == cartProducts.docs[0].products.length) return res.status(401).send({status: 'error', error: exceededStock})
+            //if(exceededStock.length === cartProducts.docs[0].products.length) return res.status(401).send({status: 'error', error: exceededStock})
 
-            await cartsService.arrayProductsUpdate(cid, exceededStock)
+            await cartsService.arrayProductsUpdate(cid, leftInCart)
+
+            console.log('leftInCart', leftInCart);
 
             let purchase_datetime = new Date()
             let purchaser = req.user.email
             let code = (Math.random() + 1).toString(36).substring(7);
-            req.logger.info(`${amount}, ${purchaser}, ${purchase_datetime}`)
+            req.logger.info(`${code}, ${amount}, ${purchaser}, ${purchase_datetime}`)
 
-            let ticket = await ticketService.createTicket(code, purchase_datetime, amount, purchaser)
+            let ticket = await ticketService.purchaseTicket(code, purchase_datetime, amount, purchaser)
 
-            !exceededStock.length ? res.send({ status: 'success', payload: ticket }) : res.send({ status: 'success', payload: ticket, 'Por falta de stock quedan pendientes en el carrito los siguientes productos': exceededStock })
+            console.log('ticket', ticket);
+
+            let datos 
+            !exceededStock.length ? datos = { ticket, cart, exceededStock } : datos = { ticket, cart}
+            
+            console.log('datos', datos);
+
+            res.render('cartPurchaseTicket', datos)
 
         } catch (error) {
             req.logger.error(error)

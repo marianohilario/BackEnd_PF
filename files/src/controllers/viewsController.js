@@ -32,7 +32,7 @@ class ViewsController {
                         limit,
                         query,
                         username: req.session.user,
-                        usercart: req.session.cart,
+                        cart: req.session.cart,
                         cartItems
                     }
                     res.render('home', datos)
@@ -47,7 +47,7 @@ class ViewsController {
                         limit,
                         query,
                         username: req.session.user,
-                        usercart: req.session.cart
+                        cart: req.session.cart
                     }
                     res.render('home', datos)
                 }
@@ -63,7 +63,7 @@ class ViewsController {
                     limit,
                     query,
                     username: req.session.user,
-                    usercart: req.session.cart
+                    cart: req.session.cart
                 }
                 res.render('home', datos)
             }
@@ -72,7 +72,7 @@ class ViewsController {
         }
     }
 
-    cartsRender = async (req = request, res)=>{
+    cartsRender = async (req, res)=>{
         const {cid} = req.params
         const {limit = 1 , page = 1} = req.query
         try {
