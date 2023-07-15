@@ -57,6 +57,7 @@ class CartsController {
                     cartItems,
                     cart
                 }
+                console.log(datos);
                 res.status(201).render('carts', datos)
             }
             
@@ -151,12 +152,21 @@ class CartsController {
                 const dbProduct = await productsService.getProductById(product.pid)
                 if(product.quantity <= dbProduct.stock) {
                     dbProduct.stock -= product.quantity
-                    amount += (dbProduct.price * product.quantity)
+                    //amount += (dbProduct.price * product.quantity)
                     const { title, description, code, price, status, stock, category, thumbnail} = dbProduct
-                    const obj = { title, description, code, price, status, stock, category, thumbnail}
-                    await productsService.updateProduct(product.pid, obj)
+                    const prodToUpdate = { title, description, code, price, status, stock, category, thumbnail}
+                    await productsService.updateProduct(product.pid, prodToUpdate)
                 } else {
-                    exceededStock.push(dbProduct)
+                    const { title, description, code, price, status, stock, category, thumbnail} = dbProduct
+                    const newObject = { title, description, code, price, status, stock, category, thumbnail}
+                    newObject.pid = product.pid
+                    newObject.quantity =  product.quantity
+                    newObject.subTotal =  product.quantity * newObject.price
+                    amount = amount + newObject.subTotal
+                    cartItems = cartItems + newObject.quantity
+                    newObject.subTotal =  newObject.subTotal.toLocaleString("es-AR");
+                    newObject.price = newObject.price.toLocaleString("es-AR");
+                    exceededStock.push(newObject)
                     leftInCart.push(product)
                 }
             }
@@ -165,21 +175,23 @@ class CartsController {
 
             await cartsService.arrayProductsUpdate(cid, leftInCart)
 
-            console.log('leftInCart', leftInCart);
+            //console.log('leftInCart', leftInCart);
 
             let purchase_datetime = new Date()
             let purchaser = req.user.email
             let code = (Math.random() + 1).toString(36).substring(7);
-            req.logger.info(`${code}, ${amount}, ${purchaser}, ${purchase_datetime}`)
+            //req.logger.info(`${code}, ${amount}, ${purchaser}, ${purchase_datetime}`)
 
             let ticket = await ticketService.purchaseTicket(code, purchase_datetime, amount, purchaser)
 
-            console.log('ticket', ticket);
+            //console.log('ticket', ticket);
 
-            let datos 
-            !exceededStock.length ? datos = { ticket, cart, exceededStock } : datos = { ticket, cart}
+            const purchaseID = ticket._id
+            let datos
+            amount = amount.toLocaleString("es-AR");
+            exceededStock.length ? datos = { exceededStock, ticket, purchaseID, cart, cartItems, amount } : datos = { ticket, cart}
             
-            console.log('datos', datos);
+            //console.log('datos', datos);
 
             res.render('cartPurchaseTicket', datos)
 

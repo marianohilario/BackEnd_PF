@@ -4,21 +4,26 @@
             <h2>Thanks for your purchase</h2>
         </div>
         {{#if exceededStock}}
-            <p>Part of your purchase has been successfully processed</p>
-            {{!-- <div class="col-md-2 d-flex align-items-end pe-3 justify-content-end mb-2">
+            <div class="col-md-2 d-flex align-items-end pe-3 justify-content-end mb-2">
                 <form action="/api/carts/{{cart}}?_method=DELETE" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                     <input class="removeBtn" type="submit" id="removeProduct" value="Empty cart">
                 </form>
-            </div> --}}
+            </div>
         {{/if}}
     </div>
     <div class="row">
-        {{#if productos}}
+        {{#if exceededStock}}
         <div class="col-md-8">
             <div class="card bg-primary pb-2 shadow">
                 <div class="row mx-3 mt-3">
-                    {{#each productos}}
+                    <div class="card mb-2 text-center">
+                        <p>Part of your purchase has been successfully processed</p>
+                        <p>Your purchase was registered with de ID: <b> {{ purchaseID }} </b> <i class="bi bi-check-circle-fill text-success fs-5"></i></p>
+                        <br>
+                        <p>The following items could not be processed due to out of stock...</p> 
+                    </div>
+                    {{#each exceededStock}}
                     <div class="card mb-2">
                         <div class="row g-0">
                             <div class="col-md-2 d-flex">
@@ -27,7 +32,14 @@
                             <div class="col-md-8">
                                 <div class="card-body">
                                     <h5 class="card-title mb-3">{{ title }}</h5>
-                                    <p class="card-text mb-1"> Quantity: <b> {{ quantity }} </b> </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="card-text mb-1"> Quantity: <b> {{ quantity }} </b> </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="card-text"><small class="ms-3 text-body-secondary"> Available stock : {{ stock }} </small></span>
+                                        </div>
+                                    </div>
                                     <p class="card-text"> Price: <b> $ {{ price }} </b> </p>
                                     <div class="text-end">
                                         <form action="/api/carts/{{../cart}}/product/{{pid}}?_method=DELETE" method="POST">
