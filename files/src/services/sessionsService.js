@@ -43,8 +43,6 @@ class SessionsService {
 
   async updateUser(email, password) {
     try {
-      logger.info(`email UserService: ${email}`);
-      logger.info(`password UserService: ${password}`);
       let user = await mongoUserManager.updateUser(email, password);
       return user;
     } catch (error) {

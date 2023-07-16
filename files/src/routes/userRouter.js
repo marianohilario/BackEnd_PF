@@ -5,9 +5,18 @@ import { uploader } from "../middleware/multer.js"
 const router = Router()
 const usersController = new UsersController
 
-router.get('/premium/:uid', usersController.rollSwitch)
+// Render password change
 router.get('/changePassword/:token', usersController.renderChangePassword)
+
+// Reset password
 router.post('/changePassword', usersController.changePassword)
+
+
+
+
+router.get('/premium/:uid', usersController.rollSwitch)
+
+
 router.get('/:uid/documents', usersController.documentsRender)
 router.post('/:uid/documents', 
                             //uploader.array('profile'), 

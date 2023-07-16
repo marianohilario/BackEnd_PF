@@ -1,4 +1,3 @@
-import { request } from "express";
 import { createTransport } from "nodemailer";
 import config from "../config/config.js";
 import { generateToken } from "../utils/jwt.js";
@@ -8,8 +7,8 @@ import logger from "../utils/logger.js";
 const sessionsService = new SessionsService();
 
 export class MailController {
-  mailRender = async (req = request, res) => {
-    res.render("mail");
+  mailRender = async (req, res) => {
+    res.render("mailRecoverPassword");
   };
 
   sendMail = async (req = request, res) => {
@@ -17,11 +16,10 @@ export class MailController {
     try {
       let user = await sessionsService.getUser(email);
 
-      if (!user)
-        res.send({
-          status: "401",
-          message: "El usuario no existe",
-        });
+      if (!user){
+        req.flash('error_msg', `The email ${email} is not registered`)
+        return res.status(401).redirect(`/api/mail`)
+    }
 
       let token = generateToken(user);
 
@@ -46,10 +44,8 @@ export class MailController {
                     </div>`,
       });
 
-      res.send({
-        status: "success",
-        payload: "Correo de recuperación enviado satisfactoriamente",
-      });
+      req.flash('success_msg', 'Recovery email sent successfully')
+      res.redirect(`/auth/login`)
     } catch (error) {
       logger.error(error);
     }

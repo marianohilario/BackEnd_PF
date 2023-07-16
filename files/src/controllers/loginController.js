@@ -16,7 +16,8 @@ class LoginController {
     }
 
     failLoginRender = (req, res) => {
-        res.send({status: 'Error', msg: 'Falló el login'})
+        req.flash('error_msg', 'Not user found')
+        res.redirect('/auth/login')
     }
 
     failRegisterRender = (req, res) => {
@@ -34,7 +35,8 @@ class LoginController {
                 req.session.roll = req.user.roll
                 req.session.admin = true
                 req.session.usuario = false
-                req.logger.info('Usted es admin')
+                req.session.premium = false
+                req.logger.info('Usted es Admin')
                 let last_connection = new Date
                 await sessionsService.updateLastConnection(req.user.email, last_connection)
                 res.redirect('http://localhost:8080/')
@@ -44,7 +46,8 @@ class LoginController {
                 req.session.roll = req.user.roll
                 req.session.cart = req.user.cart
                 req.session.admin = false
-                req.session.usuario = true
+                req.session.usuario = req.user.roll === "Premium" ? false : true
+                req.session.premium = req.user.roll === "Premium" ? true : false
                 req.logger.info('Usted es usuario')
                 let last_connection = new Date
                 await sessionsService.updateLastConnection(req.user.email, last_connection)

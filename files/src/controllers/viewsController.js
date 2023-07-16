@@ -1,5 +1,6 @@
 import CartsService from '../services/cartsService.js'
 import ViewsService from '../services/viewsService.js'
+import cartsModel from "../models/carts.js";
 
 const viewsService = new ViewsService
 const cartsService = new CartsService
@@ -9,6 +10,7 @@ class ViewsController {
         const {limit = 3 , page = 1, query = "", sort = "desc"} = req.query
         let filtro = {}
         query ? filtro = {category: query} : filtro = {}
+        let cartItems = 0
         try {
             const { docs, hasPrevPage, hasNextPage, prevPage, nextPage } = await viewsService.getProducts(limit, page, filtro, sort)
             const docsAux = docs.map( (elemet) => {
@@ -17,77 +19,26 @@ class ViewsController {
             })
             
             const cid = req.session.cart
-            
-            if (cid !== undefined) {
-                const cartProducts = await cartsService.cartProducts(cid, limit, page)
-                const cartItems = cartProducts.docs[0].products.length
-                if (cartItems > 0) {
-                    let datos = {
-                        productos: docs,
-                        hasPrevPage,
-                        hasNextPage,
-                        prevPage,
-                        nextPage,
-                        page,
-                        limit,
-                        query,
-                        username: req.session.user,
-                        cart: req.session.cart,
-                        cartItems
-                    }
-                    res.render('home', datos)
-                } else {
-                    let datos = {
-                        productos: docs,
-                        hasPrevPage,
-                        hasNextPage,
-                        prevPage,
-                        nextPage,
-                        page,
-                        limit,
-                        query,
-                        username: req.session.user,
-                        cart: req.session.cart
-                    }
-                    res.render('home', datos)
-                }
-                
-            } else {
-                let datos = {
-                    productos: docs,
-                    hasPrevPage,
-                    hasNextPage,
-                    prevPage,
-                    nextPage,
-                    page,
-                    limit,
-                    query,
-                    username: req.session.user,
-                    cart: req.session.cart
-                }
-                res.render('home', datos)
-            }
-        } catch (error) {
-            req.logger.error(error)
-        }
-    }
+            const cartProducts = await cartsService.cartProducts(cid, limit, page)
+            const aux = cartProducts.docs.length
 
-    cartsRender = async (req, res)=>{
-        const {cid} = req.params
-        const {limit = 1 , page = 1} = req.query
-        try {
-            const {docs, hasPrevPage, hasNextPage, prevPage, nextPage} = await viewsService.getCartProducts(cid, limit, page)
-            let data = docs[0].products
+            aux ? cartItems = cartProducts.docs[0].products.length : cartItems = 0
+
             let datos = {
-                productos: data,
+                productos: docs,
                 hasPrevPage,
                 hasNextPage,
                 prevPage,
                 nextPage,
                 page,
-                limit
+                limit,
+                query,
+                username: req.session.user,
+                superUser: req.session.premium || req.session.admin ? true : false,
+                cart: req.session.cart,
+                cartItems
             }
-            res.render('carts', datos)
+                res.render('home', datos)
         } catch (error) {
             req.logger.error(error)
         }

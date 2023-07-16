@@ -99,7 +99,7 @@ export class MongoCartManager {
     }
   }
 
-  async arrayProductsUpdate(cid, data) {
+  async cartProductsUpdate(cid, data) {
     try {
       await cartsModel.updateOne(
         {

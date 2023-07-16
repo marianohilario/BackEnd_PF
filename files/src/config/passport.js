@@ -2,7 +2,7 @@ import passport from "passport";
 import GithubStrategy from "passport-github2";
 import local from "passport-local";
 import { MongoCartManager } from "../dao/mongo/mongoCartManager.js";
-import { createHash, isValidPassword } from "../utils/bcryptPass.js";
+import { createHash, comparePassword } from "../utils/bcryptPass.js";
 import userModel from "../models/user.model.js";
 import SessionsService from "../services/sessionsService.js";
 import logger from "../utils/logger.js";
@@ -78,7 +78,7 @@ export const initPassport = () => {
             return done(null, false);
           }
 
-          if (!isValidPassword(user, password)) {
+          if (!comparePassword(user, password)) {
             logger.error("Invalid Password");
             return done(null, false);
           }

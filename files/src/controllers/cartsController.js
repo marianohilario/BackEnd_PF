@@ -55,9 +55,10 @@ class CartsController {
                     productos : array,
                     amount: amount.toLocaleString("es-AR"),
                     cartItems,
-                    cart
+                    cart,
+                    username: req.session.user,
+                    superUser: req.session.premium || req.session.admin ? true : false,
                 }
-                console.log(datos);
                 res.status(201).render('carts', datos)
             }
             
@@ -70,7 +71,6 @@ class CartsController {
     addProduct = async (req, res) => {
         const { cid, pid } = req.params
         const { select } = req.body
-        console.log(select);
         try {
             await cartsService.uploadProduct(cid, pid, select)
             req.flash('success_msg', 'Product added successfully')
@@ -116,12 +116,12 @@ class CartsController {
         }
     }
 
-    arrayProductsUpdate = async (req, res) => {
+    cartProductsUpdate = async (req, res) => {
         const { cid } = req.params
         const data = req.body
 
         try {
-            await cartsService.arrayProductsUpdate(cid, data)
+            await cartsService.cartProductsUpdate(cid, data)
             res.status(201).send({mensaje: "Producto agregado al carrito"})
             
         } catch (error) {
@@ -139,6 +139,7 @@ class CartsController {
             let exceededStock = []
             let leftInCart = []
             let amount = 0
+            let purchaseAmount = 0
             let cartItems = 0
 
             const cartProducts = await cartsService.cartProducts(cid, limit, page)
@@ -152,7 +153,7 @@ class CartsController {
                 const dbProduct = await productsService.getProductById(product.pid)
                 if(product.quantity <= dbProduct.stock) {
                     dbProduct.stock -= product.quantity
-                    //amount += (dbProduct.price * product.quantity)
+                    purchaseAmount += (dbProduct.price * product.quantity)
                     const { title, description, code, price, status, stock, category, thumbnail} = dbProduct
                     const prodToUpdate = { title, description, code, price, status, stock, category, thumbnail}
                     await productsService.updateProduct(product.pid, prodToUpdate)
@@ -173,7 +174,7 @@ class CartsController {
 
             //if(exceededStock.length === cartProducts.docs[0].products.length) return res.status(401).send({status: 'error', error: exceededStock})
 
-            await cartsService.arrayProductsUpdate(cid, leftInCart)
+            await cartsService.cartProductsUpdate(cid, leftInCart)
 
             //console.log('leftInCart', leftInCart);
 
@@ -182,17 +183,13 @@ class CartsController {
             let code = (Math.random() + 1).toString(36).substring(7);
             //req.logger.info(`${code}, ${amount}, ${purchaser}, ${purchase_datetime}`)
 
-            let ticket = await ticketService.purchaseTicket(code, purchase_datetime, amount, purchaser)
-
-            //console.log('ticket', ticket);
+            let ticket = await ticketService.purchaseTicket(code, purchase_datetime, purchaseAmount, purchaser)
 
             const purchaseID = ticket._id
             let datos
             amount = amount.toLocaleString("es-AR");
-            exceededStock.length ? datos = { exceededStock, ticket, purchaseID, cart, cartItems, amount } : datos = { ticket, cart}
+            exceededStock.length ? datos = { exceededStock, purchaseID, cart, cartItems, amount, username: req.session.user, superUser: req.session.premium || req.session.admin ? true : false } : datos = { cart, purchaseID, purchaseSuccess : true, amount : 0, cartItems : 0, username: req.session.user, superUser: req.session.premium || req.session.admin ? true : false }
             
-            //console.log('datos', datos);
-
             res.render('cartPurchaseTicket', datos)
 
         } catch (error) {

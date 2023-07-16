@@ -10,7 +10,7 @@ const cartsController = new CartsController
 // Create Cart
 router.post('/', cartsController.createCart)
 
-// Get Cart Products
+// Render Cart
 router.get('/:cid', cartsController.cartProducts)
 
 // Add Products to Cart
@@ -32,7 +32,7 @@ router.get('/:cid/purchase', userLogged, cartsController.purchaseTicket)
 //---------------------No los usé--------------------
 router.put('/:cid/product/:pid', cartsController.uploadProduct)
 
-router.put('/:cid', cartsController.arrayProductsUpdate)
+router.put('/:cid', cartsController.cartProductsUpdate)
 
 
 export default router

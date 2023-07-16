@@ -28,8 +28,8 @@ class CartsService {
         return await mongoCartManager.clearCart(cid)
     }
 
-    async arrayProductsUpdate(cid, data){
-        return await mongoCartManager.arrayProductsUpdate(cid, data)
+    async cartProductsUpdate(cid, data){
+        return await mongoCartManager.cartProductsUpdate(cid, data)
     }
 }
 

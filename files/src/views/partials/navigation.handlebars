@@ -30,9 +30,11 @@
                 <i class="bi bi-person-fill fs-4"></i>
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                {{#if superUser}}
                 <a class="dropdown-item" href="/notes">All Notes</a>
                 <a class="dropdown-item" href="/notes/add">Add A Note</a>
                 <div class="dropdown-divider"></div>
+                {{/if}}
                 <a class="dropdown-item" href="/auth/logout">Logout</a>
               </ul>
             </li>

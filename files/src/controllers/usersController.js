@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { request } from "express";
-import { createHash, isValidPassword } from "../utils/bcryptPass.js";
+import { createHash, comparePassword } from "../utils/bcryptPass.js";
 import SessionsService from "../services/sessionsService.js";
 import config from "../config/config.js";
 import logger from "../utils/logger.js";
@@ -40,16 +40,16 @@ class UserController {
   };
 
   changePassword = async (req = request, res) => {
-    const { email, password } = req.body;
-
+    const { email, password, token } = req.body;
     try {
       let user = await sessionsService.getUser(email);
 
-      if (isValidPassword(user, password)) {
-        res.send("No puede repetir la contraseña anterior");
+      if (comparePassword(user, password)) {
+        res.send("You cannot repeat the old password");
       } else {
         await sessionsService.updateUser(email, createHash(password));
-        res.send("Contraseña restablecida");
+        req.flash('success_msg', 'Password re-established')
+        res.redirect('/auth/login')
       }
     } catch (error) {
       logger.error(error);
@@ -61,7 +61,7 @@ class UserController {
     try {
       jwt.verify(token, config.jwtPrivateKey, (error) => {
         if (error) {
-          res.redirect("http://localhost:8080/api/mail");
+          res.redirect("/api/mail");
         }
         res.render("changePassword");
       });

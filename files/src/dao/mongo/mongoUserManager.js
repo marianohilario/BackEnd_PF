@@ -39,18 +39,13 @@ export class MongoUserManager {
 
   async updateUser(email, password) {
     try {
-      logger.info("MongoUserDAO");
-      logger.info(`email MongoUserDAO: ${email}`);
-      logger.info(`password MongoUserDAO: ${password}`);
       await UserModel.findOneAndUpdate(
         { email: email },
         { $set: { password: password } }
       );
       let user = await UserModel.findOne({ email: email });
-      logger.info(`user: ${user}`);
-      logger.info(`user.password: ${user.password}`);
-      logger.info("Password actualizado");
-      return "Password Updated";
+      return user;
+      // return "Password Updated";
     } catch (error) {
       logger.error(error);
     }
