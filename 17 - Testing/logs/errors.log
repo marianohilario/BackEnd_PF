@@ -1,4 +1,0 @@
-{"level":"fatal","message":"Log de nivel Fatal"}
-{"level":"error","message":"Log de nivel Error"}
-{"level":"error","message":"Error al loguearse. Usuario no existe"}
-{"level":"fatal","message":"No se puede conectar a la base de datos: MongoServerError: bad auth : authentication failed"}
