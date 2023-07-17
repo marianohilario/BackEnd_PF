@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon files/src/app.js --mode DEVELOPMENT",
-    "star": "node files/src/app.js --mode PRODUCTION",
+    "start": "node files/src/app.js --mode PRODUCTION",
     "product_test": "mocha files/test/product.test.js",
     "cart_test": "mocha files/test/cart.test.js",
     "session_test": "mocha files/test/session.test.js"
