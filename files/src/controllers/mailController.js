@@ -32,13 +32,13 @@ export class MailController {
         },
       });
 
-      let result = await transport.sendMail({
-        from: `Ecommerce - Recuperación de Pass <${config.testMailAdmin}>`,
+      await transport.sendMail({
+        from: `CoderCommerce - Recuperación de Pass <${config.testMailAdmin}>`,
         to: email,
         subject: "Recuperar contraseña",
         html: `
                 <div>
-                    <h1>Ecommerce - Curso Backend CoderHouse</h1>
+                    <h1>CoderCommerce - Curso Backend CoderHouse</h1>
                     <h4>Click en el enlace para restablecer contraseña</h4>
                     <a href="http://localhost:8080/api/users/changePassword/${token}">Restablecer Contraseña</a>
                     </div>`,

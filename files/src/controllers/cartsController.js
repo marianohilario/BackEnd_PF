@@ -21,11 +21,12 @@ class CartsController {
     cartProducts = async (req, res) => {
         const { cid } = req.params
         const {limit = 1 , page = 1, query} = req.query
-        let array = []
+        let productos = []
         let amount = 0
         let cartItems = 0
         try {
             const cartProducts = await cartsService.cartProducts(cid, limit, page)
+            console.log(cartProducts);
             const cart = cartProducts.docs[0].id
             if (cartProducts.docs[0].products.length === 0) {
                 let datos = {
@@ -49,15 +50,16 @@ class CartsController {
                     newObject.subTotal =  newObject.subTotal.toLocaleString("es-AR");
                     newObject.price = newObject.price.toLocaleString("es-AR");
     
-                    array.push(newObject)
+                    productos.push(newObject)
                 }
                 let datos = {
-                    productos : array,
+                    productos,
                     amount: amount.toLocaleString("es-AR"),
                     cartItems,
                     cart,
                     username: req.session.user,
-                    superUser: req.session.premium || req.session.admin ? true : false,
+                    AdminUser: req.session.admin,
+                    PremiumUser: req.session.premium,
                 }
                 res.status(201).render('carts', datos)
             }

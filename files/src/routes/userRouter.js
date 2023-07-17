@@ -11,10 +11,17 @@ router.get('/changePassword/:token', usersController.renderChangePassword)
 // Reset password
 router.post('/changePassword', usersController.changePassword)
 
+// Get all users
+router.get('/', usersController.getUsers)
 
-
-
+// Asign Premium Role
 router.get('/premium/:uid', usersController.rollSwitch)
+
+// Delete user
+router.delete('/:uid', usersController.deleteUser)
+
+// Delete inactive users
+router.get('/inactiveusers', usersController.deleteInactiveUsers)
 
 
 router.get('/:uid/documents', usersController.documentsRender)

@@ -1,0 +1,100 @@
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="row mb-3 d-flex align-items-center">
+            <div class="col-md-6">
+                <b> <h3>Users</h3> </b>
+            </div>
+            <div class="col-md-6">
+                <form action="/api/users/inactiveusers" method="GET">
+                    <input class="btn btn-danger w-100 d-flex align-items-center justify-content-center btn-lg" type="submit" value="Delete Inactive Users">
+                </form>
+            </div>
+        </div>
+        {{#each auxUsers}}
+            <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 d-flex">
+                                <h5 class="me-3">First Name:  </h5>
+                                <h5 class="card-title"> <b> {{ first_name }} </b> </h5>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <h5 class="me-3">Last Name:  </h5>
+                                <h5 class="card-title"> <b> {{ last_name }} </b> </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 d-flex">
+                                <h5 class="me-3">email:  </h5>
+                                <h5 class="card-title"> <b> {{ email }} </b> </h5>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <h5 class="me-3">Roll:  </h5>
+                                <h5 class="card-title"> <b> {{ roll }} </b> </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md d-flex">
+                                <h5 class="me-3">Last Connection:  </h5>
+                                <h5 class="card-title"> <b> {{ last_connection }} </b> </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 px-5">
+                                {{#if Admin}}
+                                <a href="/api/users/premium/{{id}}" class="btn btn-warning w-100 disabled h-100 d-flex align-items-center justify-content-center" type="submit">Cannot Asign Premium Role</a>
+                                {{/if}} 
+                                {{#if Premium}}
+                                <a href="/api/users/premium/{{id}}" class="btn btn-outline-success w-100 h-100 d-flex align-items-center justify-content-center" type="submit">Asign User Role</a>
+                                {{/if}} 
+                                {{#if user}} {{#if documents}}
+                                <a href="/api/users/premium/{{id}}" class="btn btn-success w-100 h-100 d-flex align-items-center justify-content-center" type="submit">Asign Premium Role</a>
+                                {{else}}
+                                <a href="/api/users/premium/{{id}}" class="btn btn-success w-100 disabled" type="submit">Asign Premium Role <br> <small class="text-body-tertiary"> {{ remainingDocuments }} remaining documents </small> </a>
+                                {{/if}} {{/if}}
+                            </div>
+                            <div class="col-md-6 px-5">
+                                <form action="/api/users/{{id}}?_method=DELETE" method="POST">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input class="btn btn-danger w-100 d-flex align-items-center justify-content-center btn-lg" type="submit" value="Delete user">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        {{/each}}
+
+        <div>
+            <ul class="pagination pagination-sm">
+                {{#if hasPrevPage}}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{prevPage}}&&limit={{limit}}">&laquo;</a>
+                </li>
+                {{/if}}
+                {{#if hasPrevPage}}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{prevPage}}&&limit={{limit}}">{{prevPage}}</a>
+                </li>
+                {{/if}}
+                <li class="page-item active">
+                    <a class="page-link" href="#">{{page}}</a>
+                </li>
+                {{#if hasNextPage}}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{nextPage}}&&limit={{limit}}">{{nextPage}}</a>
+                </li>
+                {{/if}}
+                {{#if hasNextPage}}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{nextPage}}&&limit={{limit}}">&raquo;</a>
+                </li>
+                {{/if}}
+            </ul>
+        </div>
+    </div>
+</div>

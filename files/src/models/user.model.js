@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+import mongoosePaginate from "mongoose-paginate-v2"
 
 const userCollection = 'usuarios'
 
@@ -52,5 +53,7 @@ const UserSchema = Schema({
 UserSchema.pre('find', function(){
     this.populate('cart')
 })
+
+UserSchema.plugin(mongoosePaginate)
 
 export default model(userCollection, UserSchema)

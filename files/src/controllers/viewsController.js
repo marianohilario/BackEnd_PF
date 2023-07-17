@@ -34,7 +34,8 @@ class ViewsController {
                 limit,
                 query,
                 username: req.session.user,
-                superUser: req.session.premium || req.session.admin ? true : false,
+                AdminUser: req.session.admin,
+                PremiumUser: req.session.premium,
                 cart: req.session.cart,
                 cartItems
             }

@@ -14,9 +14,18 @@ class SessionsService {
     }
   }
 
-  async getUsers() {
+  async deleteUser(uid) {
     try {
-      let users = await mongoUserManager.getUsers();
+      let user = await mongoUserManager.deleteUser(uid);
+      return user;
+    } catch (error) {
+      logger.error(error);
+    }
+  }
+
+  async getUsers(limit, page) {
+    try {
+      let users = await mongoUserManager.getUsers(limit, page);
       return users;
     } catch (error) {
       logger.error(error);

@@ -1,18 +1,28 @@
-import UserModel from "../../models/user.model.js";
+import userModel from "../../models/user.model.js";
 import logger from "../../utils/logger.js";
 
 export class MongoUserManager {
   async addUser(user) {
     try {
-      return await UserModel.create(user);
+      return await userModel.create(user);
     } catch (error) {
       logger.error(error);
     }
   }
 
-  async getUsers() {
+  async deleteUser(uid) {
     try {
-      let users = await UserModel.find();
+      let user = await userModel.findOneAndDelete( { _id : uid } )
+      console.log(user);
+      return user
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+
+  async getUsers(limit, page) {
+    try {
+      let users = await userModel.paginate( {} , { limit: limit, page: page, lean: true } );
       return users;
     } catch (error) {
       logger.error(error);
@@ -21,7 +31,7 @@ export class MongoUserManager {
 
   async getUser(email) {
     try {
-      let user = await UserModel.findOne({ email: email });
+      let user = await userModel.findOne({ email: email });
       return user;
     } catch (error) {
       logger.error(error);
@@ -30,7 +40,7 @@ export class MongoUserManager {
 
   async getUserById(uid) {
     try {
-      let user = await UserModel.findOne({ _id: uid });
+      let user = await userModel.findOne({ _id: uid });
       return user;
     } catch (error) {
       logger.error(error);
@@ -39,11 +49,11 @@ export class MongoUserManager {
 
   async updateUser(email, password) {
     try {
-      await UserModel.findOneAndUpdate(
+      await userModel.findOneAndUpdate(
         { email: email },
         { $set: { password: password } }
       );
-      let user = await UserModel.findOne({ email: email });
+      let user = await userModel.findOne({ email: email });
       return user;
       // return "Password Updated";
     } catch (error) {
@@ -53,7 +63,7 @@ export class MongoUserManager {
 
   async updateRoll(email, roll) {
     try {
-      let user = await UserModel.updateOne(
+      let user = await userModel.updateOne(
         {
           email: email,
         },
@@ -71,7 +81,7 @@ export class MongoUserManager {
 
   async uploadDocument(uid, data) {
     try {
-      let user = await UserModel.updateOne(
+      let user = await userModel.updateOne(
         {
           _id: uid,
         },
@@ -89,7 +99,7 @@ export class MongoUserManager {
 
   async updateLastConnection(email, data) {
     try {
-      let user = await UserModel.updateOne(
+      let user = await userModel.updateOne(
         {
           email: email,
         },
