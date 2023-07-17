@@ -1,4 +1,4 @@
-import { MongoUserManager } from "../dao/mongo/MongoUserManager.js";
+import { MongoUserManager } from "../dao/mongo/mongoUserManager.js";
 import { UserDTO } from "../dto/users.dto.js";
 import logger from "../utils/logger.js";
 
