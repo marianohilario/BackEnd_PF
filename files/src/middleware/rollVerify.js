@@ -1,11 +1,17 @@
 import ProductsService from "../services/productsService.js"
 const productsService = new ProductsService
 
-export function rollVerify(req, res, next) {
-    if (req.user.roll === 'Admin' || req.user.roll === 'premium') {
+export function rollAminVerify(req, res, next) {
+    if (req.user.roll === 'Admin') {
         return next()
     }
-    return res.status(401).send('Usted no es administrador o usuario premium')
+    return res.status(401).send('You are not an administrator')
+}
+export function rollPremiumVerify(req, res, next) {
+    if (req.user.roll === 'premium') {
+        return next()
+    }
+    return res.status(401).send('You are not a premium user')
 }
 
 export function userLogged(req, res, next) {
@@ -15,12 +21,12 @@ export function userLogged(req, res, next) {
     return res.status(401).send('You are not a logged user')
 }
 
-export async function rollPremiumVerify(req, res, next) {
-    let pid = req.params.pid
-    let product = await productsService.getProductById(pid)
-    if (req.session.roll === 'premium' && req.session.email === product.owner) return res.status(401).send('Usted no puede adquirir su propio producto')
-    return next()
-}
+// export async function rollPremiumVerify(req, res, next) {
+//     let pid = req.params.pid
+//     let product = await productsService.getProductById(pid)
+//     if (req.session.roll === 'premium' && req.session.email === product.owner) return res.status(401).send('Usted no puede adquirir su propio producto')
+//     return next()
+// }
 
 export async function rollDeleteVerify(req, res, next) {
     let pid = req.body.productDeleteId

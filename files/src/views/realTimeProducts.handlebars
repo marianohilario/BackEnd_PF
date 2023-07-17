@@ -1,43 +1,157 @@
 <div>
-    <h2>Agregar un producto</h2>
-    <form action="http://localhost:8080/api/products" method="POST">
-        <label>Titulo</label> <br>
-        <input type="text" name="title" id="title"> <br>
+    <h2 class="text-center mb-3">Products Manager</h2>
 
-        <label>Descripcion</label> <br>
-        <input type="text" name="description" id="description"> <br>
+    <div class="row mb-5">
+    <div class="col-md-7 mx-auto">
+        <div class="card bg-primary text-white">
+        <div class="card-header pt-3">
+            <h4 class="text-center">
+            Create Product
+            </h4>
+        </div>
+        <div class="card-body">
+            <form action="/auth/register" method="POST">
+            <div class="mb-3">
+                <label for="title">Title:</label>
+                <input
+                type="text"
+                class="form-control bg-dark text-white"
+                name="title"
+                placeholder="Product Title"
+                value="{{title}}"
+                />
+            </div>
+            <div class="mb-3">
+                <label for="description">Description:</label>
+                <input
+                type="text"
+                class="form-control bg-dark text-white"
+                name="description"
+                placeholder="Product Description"
+                value="{{description}}"
+                />
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="code">Code:</label>
+                        <input
+                        type="text"
+                        class="form-control bg-dark text-white"
+                        name="code"
+                        placeholder="Code"
+                        value="{{code}}"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="price">Price:</label>
+                        <input
+                        type="number"
+                        class="form-control bg-dark text-white"
+                        name="price"
+                        placeholder="Price"
+                        value="{{price}}"
+                        min="1"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="stock">Stock</label>
+                        <input
+                        type="number"
+                        class="form-control bg-dark text-white"
+                        name="stock"
+                        placeholder="Available Stock"
+                        value="{{stock}}"
+                        min="1"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="category">Category:</label>
+                        <input
+                        type="text"
+                        class="form-control bg-dark text-white"
+                        name="category"
+                        placeholder="Category"
+                        value="{{category}}"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="thumbnail">Imagen:</label>
+                        <input
+                        type="text"
+                        class="form-control bg-dark text-white"
+                        name="thumbnail"
+                        placeholder="Link to Thumbnail"
+                        value="{{thumbnail}}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-success btn-block w-100 mt-4">
+                Create
+            </button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
 
-        <label>Code</label> <br>
-        <input type="text" name="code" id="code"> <br>
+    <h3>All your products</h3>
 
-        <label>Precio</label> <br>
-        <input type="number" name="price" id="price"> <br>
-
-        <label>Stock</label> <br>
-        <input type="number" name="stock" id="stock"> <br>
-
-        <label>Categoria</label> <br>
-        <input type="text" name="category" id="category"> <br>
-
-        <label>Imagen</label> <br>
-        <input type="text" name="thumbnail" id="thumbnail"> <br>
-
-        <button type="submit">Agregar Producto</button>
-    </form>
-
-    <h2>Elimine un producto</h2>
-    <form id="formDelete" action="#" method="POST">
-        <input type="hidden" name="_method" value="DELETE">
-        <label>Ingrese el id del producto a eliminar</label> <br>
-        <input type="text" name="productDeleteId" id="productDelete"> <br>
-
-        <input type="submit" id="deleteProduct" value="Eliminar Producto">
-    </form>
-
-    <h2>Todos los Productos</h2>
-
-    <div id="container"></div>
+    <div class="row">
+        {{#if productos}}
+        <div class="col-md">
+            <div class="card bg-primary pb-2 shadow">
+                <div class="row mx-3 mt-3">
+                    {{#each productos}}
+                    <div class="card mb-2">
+                        <div class="row g-0">
+                            <div class="col-md-2 d-flex">
+                                <img src="{{thumbnail}}" class="img-fluid rounded-start mx-auto my-auto" alt="{{title}}"  style="max-height: 140px;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">{{ title }}</h5>
+                                    <p class="card-title mb-3">{{ description }}</p>
+                                    <p class="card-text mb-1"> Stock: <b> {{ stock }} </b> </p>
+                                    <p class="card-text"> Price: <b> $ {{ price }} </b> </p>
+                                </div>
+                            </div>
+                            <div class="col-md-2 fs-5 d-flex flex-column justify-content-center align-items-center gap-3">
+                                <button class="btn btn-primary w-100">Edit</button>
+                                <button class="btn btn-danger w-100">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md">
+            <div class="card bg-primary pb-2">
+                <div class="row mx-3 mt-3">
+                    <div class="card mb-2">
+                        <div class="row g-0">
+                            <div class="col-md">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">There are no products in your catalog...</h5>
+                                </div>
+                            </div>        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
 </div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="../public/js/index.js"></script>

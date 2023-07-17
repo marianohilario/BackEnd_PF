@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth } from '../middleware/auth.js'
 import ViewsController from "../controllers/viewsController.js"
-import { rollVerify, userLogged } from "../middleware/rollVerify.js";
+import { rollAminVerify, userLogged } from "../middleware/rollVerify.js";
 
 const router = Router()
 

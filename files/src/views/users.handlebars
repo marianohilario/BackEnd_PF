@@ -6,7 +6,8 @@
                 <b> <h3>Users</h3> </b>
             </div>
             <div class="col-md-6">
-                <form action="/api/users/inactiveusers" method="GET">
+                <form action="/api/users/?_method=DELETE" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
                     <input class="btn btn-danger w-100 d-flex align-items-center justify-content-center btn-lg" type="submit" value="Delete Inactive Users">
                 </form>
             </div>

@@ -4,8 +4,8 @@ import { ProductsDTO } from "../dto/products.dto.js";
 const mongoProductManager = new MongoProductManager
 
 class ProductsService {
-    async getProducts(limit) {
-        return await mongoProductManager.getProducts(limit)
+    async getProducts(limit, page, query, sort) {
+        return await mongoProductManager.getProducts(limit, page, query, sort)
     }
     
     async getProductById(pid) {
