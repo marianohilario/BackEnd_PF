@@ -39,7 +39,7 @@ class LoginController {
                 req.logger.info('Usted es Admin')
                 let last_connection = new Date
                 await sessionsService.updateLastConnection(req.user.email, last_connection)
-                res.redirect('http://localhost:8080/')
+                res.redirect('/')
             } else {
                 req.session.user = req.user.first_name
                 req.session.email = req.user.email
@@ -51,7 +51,7 @@ class LoginController {
                 req.logger.info('Usted es usuario')
                 let last_connection = new Date
                 await sessionsService.updateLastConnection(req.user.email, last_connection)
-                res.redirect('http://localhost:8080/')
+                res.redirect('/')
             }
         } catch (error) {
             req.logger.error(error)
@@ -89,7 +89,7 @@ class LoginController {
     logout = async (req, res, next) => {
         try {
             req.session.destroy(err => {
-                if(!err) res.redirect('http://localhost:8080/')
+                if(!err) res.redirect('/')
                 else res.send({status:'Logout error', message: err})
             })
         } catch (error) {
@@ -102,7 +102,7 @@ class LoginController {
         req.session.email = req.user.email
         req.session.admin = false
         req.session.usuario = true
-        res.redirect('http://localhost:8080/')
+        res.redirect('/')
     }
 }
 
