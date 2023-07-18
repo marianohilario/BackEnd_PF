@@ -45,3 +45,7 @@ a:hover {
     color: rgb(0, 0, 255);
     text-decoration: underline;
 }
+
+.editDeleteSize {
+    min-width: 100px;
+}

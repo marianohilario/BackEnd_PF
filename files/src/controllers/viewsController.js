@@ -62,7 +62,7 @@ class ViewsController {
                 elemet.description = `${elemet.description.substring(0,75)} ...`
                 elemet.price = elemet.price.toLocaleString("es-AR");
             })
-
+            
             let datos = {
                 productos: docs,
                 hasPrevPage,
@@ -70,6 +70,7 @@ class ViewsController {
                 prevPage,
                 nextPage,
                 page,
+                limit,
                 username: req.session.user,
                 AdminUser: req.session.admin,
                 PremiumUser: req.session.premium,

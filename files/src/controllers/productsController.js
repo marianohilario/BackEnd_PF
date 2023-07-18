@@ -1,61 +1,74 @@
-import { request } from 'express'
 import ProductsService from '../services/productsService.js'
-import CustomError from '../errors/customError.js'
 
 const productsService = new ProductsService
 
 class ProductsController {
-    getProducts = async (req = request, res) => {
+    getProducts = async (req, res) => {
       const { limit, page = 1, sort = "desc" } = req.query
-    
+      const query = {}
       try {
-        let data = await productsService.getProducts(limit)
-        res.send(data.docs)
+        const { docs, hasPrevPage, hasNextPage, prevPage, nextPage } = await productsService.getProducts(limit, page, query, sort)
+        const docsAux = docs.map( (elemet) => {
+          elemet.description = `${elemet.description.substring(0,75)} ...`
+          elemet.price = elemet.price.toLocaleString("es-AR");
+        })
+      
+        let datos = {
+          productos: docs,
+          hasPrevPage,
+          hasNextPage,
+          prevPage,
+          nextPage,
+          page,
+          limit
+        }
+        res.render('productManager', datos)
       } catch (error) {
           req.logger.error(error)
       }
     }
 
-    getProductById = async (req = request, res) => {
+    getProductById = async (req, res) => {
       const { pid } = req.params
     
       try {
-        const allProducts = await productsService.getProducts()
         const productById = await productsService.getProductById(pid)
     
-        pid ? res.send(productById) : res.send(allProducts)
+      res.render('productEdit', productById)
       } catch (error) {
           req.logger.error(error)
       }
     }
 
-    addProduct = async (req = request, res) => {
+    addProduct = async (req, res) => {
       const newItem = req.body
       newItem.status = true
       newItem.owner = req.user.roll === "Admin" ? "Admin" : req.session.email
       
       try {
         await productsService.addProduct(newItem)
-        res.send({mensaje: 'Producto agregado'})
+        res.send({mensaje: 'Product added'})
       } catch (error) {
           req.logger.error(error)
       }
     }
 
-    updateProduct = async (req = request, res) => {
+    updateProduct = async (req, res) => {
       const { pid } = req.params
       const newItem = req.body
-    
+      newItem.status = true
+      newItem.owner = req.user.roll === "Admin" ? "Admin" : req.session.email
       const prod = newItem
       try {
         await productsService.updateProduct(pid, prod)
-        res.send({mensaje: 'Producto actualizado'})
+        req.flash('success_msg', 'Product edited successfully')
+        res.redirect('/realTimeProducts')
       } catch (error) {
           req.logger.error(error)
       }
     }
 
-    delete = async (req = request, res) => {
+    delete = async (req, res) => {
       const { pid } = req.params
       try {
         let product = await productsService.getProductById(pid)
@@ -63,7 +76,8 @@ class ProductsController {
             return res.status(401).send({mensaje: 'Producto no encontrado en la Base de Datos'})
         } else {
             await productsService.deleteProduct(pid)
-            res.send({mensaje: 'Producto eliminado'})
+            req.flash('success_msg', 'Product deleted successfully')
+            res.status(201).redirect('/realtimeproducts')
         }
       } catch (error) {
           req.logger.error(error)

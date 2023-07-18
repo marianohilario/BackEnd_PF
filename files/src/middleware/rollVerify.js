@@ -1,17 +1,23 @@
 import ProductsService from "../services/productsService.js"
 const productsService = new ProductsService
 
-export function rollAminVerify(req, res, next) {
+export function VerifyRollAdminOrPremium(req, res, next) {
+    if (req.user.roll === 'Admin' || req.user.roll === 'Premium') {
+        return next()
+    }
+    return res.status(401).send('You are not an administrator or premium user')
+}
+export function rollPremiumVerify(req, res, next) {
+    if (req.user.roll === 'Premium') {
+        return next()
+    }
+    return res.status(401).send('You are not a premium user')
+}
+export function rollAdminVerify(req, res, next) {
     if (req.user.roll === 'Admin') {
         return next()
     }
     return res.status(401).send('You are not an administrator')
-}
-export function rollPremiumVerify(req, res, next) {
-    if (req.user.roll === 'premium') {
-        return next()
-    }
-    return res.status(401).send('You are not a premium user')
 }
 
 export function userLogged(req, res, next) {
@@ -19,32 +25,4 @@ export function userLogged(req, res, next) {
         return next()
     }
     return res.status(401).send('You are not a logged user')
-}
-
-// export async function rollPremiumVerify(req, res, next) {
-//     let pid = req.params.pid
-//     let product = await productsService.getProductById(pid)
-//     if (req.session.roll === 'premium' && req.session.email === product.owner) return res.status(401).send('Usted no puede adquirir su propio producto')
-//     return next()
-// }
-
-export async function rollDeleteVerify(req, res, next) {
-    let pid = req.body.productDeleteId
-    let product = await productsService.getProductById(pid)
-    switch (req.session.roll) {
-        case "Admin": {
-            return next()
-        }
-        case "premium": {
-            if (req.session.email === product.owner) {
-                return next()
-            } else {
-                res.status(401).send('Usted no tiene permisos para eliminar productos que no son de su catálogo')
-                break
-            }
-        }
-        default: {
-            return res.status(401).send('Usted no tiene permisos')
-        }
-    }
 }

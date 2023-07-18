@@ -1,7 +1,7 @@
 import { Router } from "express";
 import UsersController from "../controllers/usersController.js";
 import { uploader } from "../middleware/multer.js"
-import { rollAminVerify } from "../middleware/rollVerify.js";
+import { rollAdminVerify } from "../middleware/rollVerify.js";
 
 const router = Router()
 const usersController = new UsersController
@@ -13,16 +13,16 @@ router.get('/changePassword/:token', usersController.renderChangePassword)
 router.post('/changePassword', usersController.changePassword)
 
 // Users manager
-router.get('/', rollAminVerify, usersController.getUsers)
+router.get('/', rollAdminVerify, usersController.getUsers)
 
 // Asign Premium Role
-router.get('/premium/:uid', rollAminVerify, usersController.rollSwitch)
+router.get('/premium/:uid', rollAdminVerify, usersController.rollSwitch)
 
 // Delete user
-router.delete('/:uid', rollAminVerify,  usersController.deleteUser)
+router.delete('/:uid', rollAdminVerify,  usersController.deleteUser)
 
 // Delete inactive users
-router.delete('/', rollAminVerify, usersController.deleteInactiveUsers)
+router.delete('/', rollAdminVerify, usersController.deleteInactiveUsers)
 
 
 router.get('/:uid/documents', usersController.documentsRender)
