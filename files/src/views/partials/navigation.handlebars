@@ -31,17 +31,19 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 {{#if AdminUser}}
-                <a class="dropdown-item" href="/api/users">Manage Users</a>
-                <a class="dropdown-item" href="/realtimeproducts">Manage Products</a>
+                <a class="dropdown-item" href="/api/users">Users Manager</a>
+                <a class="dropdown-item" href="/api/products">Products Manager</a>
                 <div class="dropdown-divider"></div>
                 {{/if}}
                 {{#if PremiumUser}}
-                <a class="dropdown-item" href="/realtimeproducts">Manage Products</a>
+                <a class="dropdown-item" href="/realtimeproducts">Products Manager</a>
                 <div class="dropdown-divider"></div>
                 {{/if}}
                 <a class="dropdown-item" href="/auth/logout">Logout</a>
               </ul>
             </li>
+            {{#if AdminUser}}
+            {{else}}
             <ul class="navbar-nav me-auto">
               <li class="nav-item fs-4">
                   {{#if cartItems}}
@@ -51,6 +53,7 @@
                   {{/if}}
               </li>
             </ul>
+            {{/if}}
           {{else}}
             <li class="nav-item">
               <a class="nav-link" href="/auth/login">Login</a>

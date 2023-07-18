@@ -1,6 +1,3 @@
-import ProductsService from "../services/productsService.js"
-const productsService = new ProductsService
-
 export function VerifyRollAdminOrPremium(req, res, next) {
     if (req.user.roll === 'Admin' || req.user.roll === 'Premium') {
         return next()

@@ -97,7 +97,7 @@ class LoginController {
         }
     }
 
-    githubcallback = async (req = request, res) => {
+    githubcallback = async (req, res) => {
         req.session.user = req.user.first_name
         req.session.email = req.user.email
         req.session.admin = false

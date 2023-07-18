@@ -1,6 +1,6 @@
 import multer from 'multer'
 import fs from 'fs'
-import { dirname, join } from 'path';
+import { dirname } from 'path';
 import { fileURLToPath } from "url";
 
 

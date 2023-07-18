@@ -1,4 +1,7 @@
 import ProductsService from '../services/productsService.js'
+import { createTransport } from "nodemailer";
+import config from "../config/config.js";
+import logger from "../utils/logger.js";
 
 const productsService = new ProductsService
 
@@ -20,7 +23,9 @@ class ProductsController {
           prevPage,
           nextPage,
           page,
-          limit
+          limit,
+          AdminUser: req.session.admin,
+          PremiumUser: req.session.premium,
         }
         res.render('productManager', datos)
       } catch (error) {
@@ -47,7 +52,8 @@ class ProductsController {
       
       try {
         await productsService.addProduct(newItem)
-        res.send({mensaje: 'Product added'})
+        req.flash('success_msg', 'Product added successfully')
+        res.redirect('/realTimeProducts')
       } catch (error) {
           req.logger.error(error)
       }
@@ -75,9 +81,37 @@ class ProductsController {
         if (!product) {
             return res.status(401).send({mensaje: 'Producto no encontrado en la Base de Datos'})
         } else {
-            await productsService.deleteProduct(pid)
+          await productsService.deleteProduct(pid)
+          if (req.session.admin) {
+            const email = product.owner;
+            try {
+                const transport = createTransport({
+                  service: "gmail",
+                  port: 578,
+                  auth: {
+                    user: config.testMailAdmin,
+                    pass: config.testMailPass,
+                  },
+                });
+
+                await transport.sendMail({
+                  from: `CoderCommerce - Producto Eliminado <${config.testMailAdmin}>`,
+                  to: email,
+                  subject: "Producto Eliminado",
+                  html: `
+                          <div>
+                              <h1>CoderCommerce - Curso Backend CoderHouse</h1>
+                              <h4>El siguiente producto ha sido eliminado de su catálogo</h4>
+                              <b><h3>${product.title}</h3></b>
+                              <img src="${product.thumbnail}" alt="${product.title}"  style="max-height: 140px;">
+                              </div>`,
+                });
+              } catch (error) {
+                logger.error(error);
+              }
+            }
             req.flash('success_msg', 'Product deleted successfully')
-            res.status(201).redirect('/realtimeproducts')
+            req.session.admin ? res.status(201).redirect('/api/products') : res.status(201).redirect('/realtimeproducts')
         }
       } catch (error) {
           req.logger.error(error)

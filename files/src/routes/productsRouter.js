@@ -1,20 +1,25 @@
 import { Router } from 'express'
 import ProductsController from '../controllers/productsController.js'
 import { validation } from '../middleware/validation.js'
-import { rollAdminVerify, rollPremiumVerify, VerifyRollAdminOrPremium } from '../middleware/rollVerify.js'
+import { rollAdminVerify, VerifyRollAdminOrPremium } from '../middleware/rollVerify.js'
 
 const router = Router()
 
 const productsController = new ProductsController
 
-router.get('/', productsController.getProducts)
+// Product Manager render
+router.get('/', rollAdminVerify, productsController.getProducts)
 
-router.get('/:pid', productsController.getProductById)
+// Edit product render
+router.get('/:pid', VerifyRollAdminOrPremium, productsController.getProductById)
 
-router.put('/:pid', validation, productsController.updateProduct)
+// Edit product
+router.put('/:pid',VerifyRollAdminOrPremium, validation, productsController.updateProduct)
 
-router.post('/', rollPremiumVerify, validation, productsController.addProduct)
+// Add products to data base
+router.post('/', VerifyRollAdminOrPremium, validation, productsController.addProduct)
 
+// Delete products
 router.delete('/:pid', VerifyRollAdminOrPremium, productsController.delete)
 
 export default router

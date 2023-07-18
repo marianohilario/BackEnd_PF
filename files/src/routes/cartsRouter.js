@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import CartsController from '../controllers/cartsController.js'
 import { userLogged, rollPremiumVerify } from '../middleware/rollVerify.js'
-import productIdValidation from '../middleware/productValidation.js'
 
 const router = Router()
 
@@ -14,7 +13,7 @@ router.post('/', cartsController.createCart)
 router.get('/:cid', cartsController.cartProducts)
 
 // Add Products to Cart
-router.post('/:cid/product/:pid', productIdValidation, rollPremiumVerify, userLogged, cartsController.addProduct)
+router.post('/:cid/product/:pid', rollPremiumVerify, userLogged, cartsController.addProduct)
 //router.post('/:cid/product/:pid', cartsController.addProduct) //Habilitado sólo para testear, luego eliminar y habilitar la línea de arriba.
 
 // Remove Product from Cart

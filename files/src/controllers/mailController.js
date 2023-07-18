@@ -11,7 +11,7 @@ export class MailController {
     res.render("mailRecoverPassword");
   };
 
-  sendMail = async (req = request, res) => {
+  sendMail = async (req, res) => {
     const { email } = req.body;
     try {
       let user = await sessionsService.getUser(email);
