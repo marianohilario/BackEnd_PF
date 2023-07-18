@@ -68,7 +68,7 @@ class ProductsController {
       try {
         await productsService.updateProduct(pid, prod)
         req.flash('success_msg', 'Product edited successfully')
-        res.redirect('/realTimeProducts')
+        req.session.admin ? res.redirect('/api/products') : res.redirect('/realTimeProducts')
       } catch (error) {
           req.logger.error(error)
       }

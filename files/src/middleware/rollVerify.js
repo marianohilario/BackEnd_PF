@@ -18,7 +18,7 @@ export function rollAdminVerify(req, res, next) {
 }
 
 export function userLogged(req, res, next) {
-    if (req.session?.usuario) {
+    if (req.session?.usuario || req.session?.premium) {
         return next()
     }
     return res.status(401).send('You are not a logged user')

@@ -35,7 +35,7 @@ export const initPassport = () => {
         clientSecret: "add97dffd8275a0eda30831989701a195d3fd9a1",
         callbackURL: "http://localhost:8080/auth/githubcallback",
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (profile, done) => {
         try {
           let user = await sessionsService.getUser({
             email: profile._json.email,

@@ -8,7 +8,6 @@ import mailRouter from './mailRouter.js';
 import loggerRouter from './loggerRouter.js';
 import loginRouter from './loginRouter.js';
 import mockingRouter from './mockingRouter.js';
-//import chatRouter from './chatRouter.js';
 
 const router = Router();
 
@@ -21,6 +20,5 @@ router.use("/api/users", usersRouter);
 router.use("/api/mail", mailRouter);
 router.use("/mockingproducts", mockingRouter);
 router.use("/loggerTest", loggerRouter);
-//router.use("/api/chat", chatRouter);
 
 export default router;
