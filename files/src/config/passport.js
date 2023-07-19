@@ -13,6 +13,7 @@ const mongoCartManager = new MongoCartManager();
 const sessionsService = new SessionsService();
 
 export const initPassport = () => {
+
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
@@ -31,15 +32,17 @@ export const initPassport = () => {
     "github",
     new GithubStrategy(
       {
-        clientID: "Iv1.27a6aa5f2dc735d9",
-        clientSecret: "add97dffd8275a0eda30831989701a195d3fd9a1",
+        clientID: "Iv1.d84c30aa22707ee0",
+        clientSecret: "0fe1307ee22672d48fa31283b054cffb962cccac",
         callbackURL: "http://localhost:8080/auth/githubcallback",
       },
       async (profile, done) => {
+        console.log('profile', profile);
         try {
           let user = await sessionsService.getUser({
             email: profile._json.email,
           });
+          console.log('arriba', user);
           if (!user) {
             const cart = await mongoCartManager.createCart();
             let newUser = {
@@ -54,12 +57,13 @@ export const initPassport = () => {
 
             let result = await sessionsService.addUser(newUser);
 
-            return done(null, result);
+            done(null, result);
           } else {
-            return done(null, user)
+            done(null, user)
+            console.log(user);
           }
         } catch (error) {
-          return done(error);
+          logger.error(error);
         }
       }
     )

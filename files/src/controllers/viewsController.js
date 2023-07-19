@@ -23,7 +23,7 @@ class ViewsController {
             const aux = cartProducts.docs.length
 
             aux ? cartItems = cartProducts.docs[0].products.length : cartItems = 0
-
+            
             let datos = {
                 productos: docs,
                 hasPrevPage,
@@ -34,6 +34,7 @@ class ViewsController {
                 limit,
                 query,
                 username: req.session.user,
+                uid: req.user?._id.toHexString(),
                 AdminUser: req.session.admin,
                 PremiumUser: req.session.premium,
                 cart: req.session.cart,
@@ -72,6 +73,7 @@ class ViewsController {
                 page,
                 limit,
                 username: req.session.user,
+                uid: req.user?._id.toHexString(),
                 AdminUser: req.session.admin,
                 PremiumUser: req.session.premium,
                 cart: req.session.cart,

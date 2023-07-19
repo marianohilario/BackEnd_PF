@@ -58,6 +58,7 @@ class CartsController {
                     cartItems,
                     cart,
                     username: req.session.user,
+                    uid: req.user?._id.toHexString(),
                     AdminUser: req.session.admin,
                     PremiumUser: req.session.premium,
                 }

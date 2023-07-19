@@ -36,6 +36,7 @@ class UserController {
         hasNextPage: users.hasNextPage,
         prevPage: users.prevPage,
         nextPage: users.nextPage,
+        uid: req.user?._id.toHexString(),
         AdminUser: req.session.admin,
         PremiumUser: req.session.premium,
       }
@@ -165,13 +166,17 @@ class UserController {
     }
   };
 
-  documentsRender = (req, res) => {
-    res.render("profile");
+  profileRender = async (req, res) => {
+    const { uid } = req.params
+    const user = await sessionsService.getUserById(uid);
+    res.render("profile", user);
   };
 
   uploadDocuments = async (req, res) => {
     const file = req.files;
-    if (file[0].fieldname === "documents") {
+    if (!file) res.send('No existe file')
+    console.log(file);
+    if (file[0].fieldname === "profile") {
       try {
         const { uid } = req.params;
         if (!file)

@@ -24,6 +24,7 @@ class ProductsController {
           nextPage,
           page,
           limit,
+          uid: req.user?._id.toHexString(),
           AdminUser: req.session.admin,
           PremiumUser: req.session.premium,
         }

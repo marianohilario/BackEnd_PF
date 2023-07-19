@@ -24,8 +24,10 @@ router.delete('/:uid', rollAdminVerify,  usersController.deleteUser)
 // Delete inactive users
 router.delete('/', rollAdminVerify, usersController.deleteInactiveUsers)
 
+router.get('/:uid/profile', usersController.profileRender)
+router.post('/:uid/profile', usersController.uploadDocuments)
 
-router.get('/:uid/documents', usersController.documentsRender)
+
 router.post('/:uid/documents', 
                             //uploader.array('profile'), 
                             //uploader.array('products'), 

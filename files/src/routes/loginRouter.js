@@ -30,7 +30,7 @@ router.get('/failregister', loginController.failRegisterRender)
 router.get('/logout', loginController.logout)
 
 // Github authenticate
-router.get('/github', passport.authenticate('github', {scope: ['user:email']}))
+router.get('/github', passport.authenticate('github', {scope: ['user:email']}), async(req, res) => {})
 
 router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/auth/login'}), loginController.githubcallback)
 

@@ -79,7 +79,7 @@ class LoginController {
                 password: createHash(password),
               };
             await sessionsService.addUser(newUser);
-            //req.flash("success_msg", "You are registered.");
+            req.flash("success_msg", "You are already registered.");
             res.redirect("/auth/login");
         } catch (error) {
             req.logger.error(error)
